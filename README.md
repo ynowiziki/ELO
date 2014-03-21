@@ -1,4 +1,4 @@
 eng
 ===
 
-English Learning Community
+An English Learning Community, which enables memebers learn from each other.
