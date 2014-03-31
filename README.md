@@ -1,29 +1,16 @@
 Equalize Learning Opportunities.
-===
+==============
 
-This is an e-Learning Community, which enables its members to learn from each other.<br>
-<br>
-The Community differentiates itself to other learning websites in several ways:<br>
-1. It's a totally free community, where people can study whatever subject without paying money for it.<br>
-2. It's based on peer-assisted study model: all the learning materials and methods are contributed by members.<br>
-3. It's an open source project (applies LGPL 3.0 License).<br>
-4. The user interface is clean and clear. No ads or commercials allowed.<br>
-<br>
-High level functional considerations:<br>
-1. Users can upload their interested learning materials, markup their notes, comments and understandings. These documents can also be reviewed, commented, forwarded, or scored by other users;<br>
-2. Materials with highest scores will be recommended to other users who concern the specific subject;<br>
-3. By following another user, an user can see all the new materials it published.<br>
-4. A group of users can share a set of materials to form a study team, in which they can compare progress, discuss issues and challenge each other.<br>
-5. Provide random user pairing option for day-to-day practice.<br>
-<br>
-Technical Architecture:<br>
-1. Back-end is a set of Node.js Restful API.<br>
-2. Front-end is a AngularJS single page app, which communicates with backend in JSON.<br>
-3. On data persistent, MongoDB is the back-end platform, while IndexedDB is used in front-end as offline cache.<br>
-4. Front-end could also be packaged into a Chrome App to better support offline mode.<br>
-5. Production system will be deployed on some Cloud platform, but only for developing period. No further support for the production system is guaranteed once the development work is done.<br>
-6. Use Bootstrap as front-end styles lib.<br>
-<br>
-Schedule:<br>
-1. Refining functional specs:     2 weeks<br>
-2. Development and testing:       4 weeks<br>
+This is an e-Learning Community, which enables its members to learn from each other.
+
+Generally, just like other social network platforms, this community highly depends on its members to contribute contents -- learning materials, methods, experiences, and comments. It is totally different from a traditional, centralized learning platform, where the study experiences are organized by people who runs the web site.
+
+Due to variety of human intelligences, learning process is personalized, which renders standardized study approach less efficient. That is a rationale behind the idea of building a decentralized platform to provide diversified learning experiences.
+
+The above proposition is based on a strong belief: the evolution of World Wide Web, especially web 2.0 concept, laid a foundation to equalize learning opportunities. Now, what e-learning can offer should be more than just convenience, efficiency, and low cost. With peer-assisted collaborative learning model, this community hope to facilitate people to learn from each other, regardless of their social, economical, academical or geographical status.
+
+
+Also, this Community differentiates itself to other learning websites in several other ways:
+- It's a free community, where people can study whatever subject without paying money for it.
+- It's an open source project (applies LGPL 3.0 License).
+- No ads or commercials in user interface.

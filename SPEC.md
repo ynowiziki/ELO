@@ -3,23 +3,32 @@ Functional Specifications
 
 The purpose of this document is to describe the expected functionality of the e-learning community. Comments are welcome and appreciated.
 
-Generally, just like other social network platforms, this community highly depends on its members to contribute contents -- learning materials, methods, experiences, and comments. It is totally different from a traditional, centralized learning platform, where the study experiences are organized by people who runs the web site.
+As discussed in README.md, the kernel of the app is a mechanism that encourages members to share their learning experience, methods and materials, so that people at all levels could benefit from the community. On the other hand, post owners could also learn from the feedback their followers give.
 
-Due to variety of human intelligence, learning process is personalized, which render standard study method less efficient. That is also a rationale behind the idea of building a decentralized platform to provide diversified learning experiences.
+But how? Luckily, We don't have to reinvent the wheel, since there are inspiring models from great communities, like GitHub or Stack Overflow, where members constantly contribute valuable ideas, answers and codes.
 
-The above proposition is based on a strong belief: the evolution of World Wide Web, especially web 2.0 concept, provides a platform to equalize learning opportunities. Now, what e-learning can offer should be more than only convenience, efficiency, and low cost. With peer-assisted learning model, this community hope to facilitate people to learn from each other, regardless of their social, economical, academical or geographical status.
-
-Therefore, the kernel of the app is a mechanism that encourages members to share their learning experience, methods and materials, so that people at all levels could benefit from the community. On the other hand, post owners could also learn from the feedback their followers give.
-
-But how? Luckily, I don't have to reinvent the wheel, since there are inspiring models from great communities like GitHub or Stack Overflow, where members constantly contribute valuable ideas, answers and codes.
-
-
+So, here comes the requirements:
 
 Use Cases
 --------------
-<TBD>
+- Users can upload their interested learning materials, markup their notes, comments and understandings. All these documents are open to be reviewed, commented, forwarded, or scored by other users.
+- For all these documents, there are two types of media being supported: text and audio. (Maybe later video will be enlisted.)
+- The main input UI is a rich editor, where both types of media can be mixed for users to edit learning materials, give feedback, and practice interactively.
+- Materials with highest scores will be recommended to other users who concern the specific subject;
+- By following another user, an user can see all the new materials it published.
+- Base on same set of materials, users can initiate or join a specific group, in which group members can compare progress, discuss problems and challenge each other.
 
-Requirements:
+
+Technical Architecture
 --------------
-<TBD>
+- Back-end is a set of Node.js Restful API.
+- Front-end is a AngularJS single page app, which communicates with backend in JSON.
+- On data persistent, MongoDB is the back-end platform, while IndexedDB is used in front-end as offline cache.
+- Front-end could also be packaged into a Chrome App to better support offline mode.
+- Production system will be deployed on some Cloud platform, but only for developing period. No further support for the production system is guaranteed once the development work is done.
+- Use Bootstrap as front-end styles lib.
 
+Schedule
+--------------
+- Refining functional specs:     2 weeks
+- Development and testing:       4 weeks
