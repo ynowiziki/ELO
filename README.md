@@ -10,7 +10,7 @@ Due to variety of human intelligences, learning process is personalized, which r
 The above proposition is based on a strong belief: the evolution of World Wide Web, especially web 2.0 concept, laid a foundation to equalize learning opportunities. Now, what e-learning can offer should be more than just convenience, efficiency, and low cost. With peer-assisted collaborative learning model, this community hope to facilitate people to learn from each other, regardless of their social, economical, academical or geographical status.
 
 
-Also, this Community differentiates itself to other learning websites in several other ways:
+Also, this Community differentiates itself to other remote education websites in several other ways:
 - It's a free community, where people can study whatever subject without paying money for it.
 - It's an open source project (applies LGPL 3.0 License).
 - No ads or commercials in user interface.
