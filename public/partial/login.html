@@ -11,5 +11,6 @@
 				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login();">Sign in</button>
 			</form>
 		</div>
-		<a href="/auth/yahoo">Sign On with Yahoo</a>
+		<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
+		<a href="/auth/google" target="_self">Sign On with Google OpenID</a>
 

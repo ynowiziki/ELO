@@ -12,14 +12,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                 templateUrl: '/partial/login.html',
                 controller: 'LoginCtrl'
             })
-////            .when('/quit/:id',{
-////                templateUrl: '/partial/quit.partial',
-////                controller: 'QuitCtrl'
-////            })
-//            .when('/404',
-//            {
-//                templateUrl:'/partial/404.html'
-//            })
             .when('/401',
             {
                 templateUrl:'/partial/login.html'
@@ -32,7 +24,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                     return path ;
                 }
             });
-//        console.log($routeProvider);
         $locationProvider.html5Mode(true);
         var interceptor = ['$location', '$rootScope', '$q', function($location, $rootScope, $q) {
             function success(response) {
@@ -46,15 +37,15 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                     console.log('>>>>>>>>>>>>>>>>>>>>');
                     console.log($rootScope.savePath);
                     $location.path('/401');
-//                    return;
+                    return;
                 }
                 else if (status === 403) {
                     $location.path("/forbidden");
-//                    return;
+                    return;
                 }
                 else if (status === 404) {
                     $location.path("/404");
-//                    return;
+                    return;
                 }
                 // otherwise
 
@@ -79,18 +70,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         console.log(next);
         console.log(current);
         console.log('===================== end ==============');
-//        alert('change now');
     });
 
 }]);
-
-app.controller('LoginCtrl', function($resource ,$scope) {
-    $scope.message = "请输入您的用户名和密码：";
-    $scope.login = function() {
-        console.log('login now');
-        $scope.message = $resource('/login').query();
-    };
-});
 
 app.controller('authedCtrl', function($scope, $resource){
     console.log('authed ctroller');
