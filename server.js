@@ -1,9 +1,11 @@
 
 function authenticated(req, res, next) {
-    if (req.isAuthenticated()) { return next(); }
+    if (req.isAuthenticated()) {
+        return next();
+    }
     res.send(401);
 }
-var User = require('./lib/userDAO');
+var User = require('./lib/userCache');
 var express = require('express')
     , http = require('http')
     , path = require('path');
@@ -12,11 +14,8 @@ var redis = require('redis');
 var db = redis.createClient();
 var app = express();
 
-
 var passport = require('passport')
     , GoogleStrategy = require('passport-google').Strategy;
-
-
 
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -42,28 +41,9 @@ app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-
-//app.use(function(req, res, next){
-//    var ua = req.headers['user-agent'];
-//    db.zadd('online', Date.now(), ua, next);
-//});
-//
-//app.use(function(req, res, next){
-//    var min = 60 * 1000;
-//    var ago = Date.now() - min;       //user count in the recent minute
-//    db.zrevrangebyscore('online', '+inf', ago, function(err, users){
-//        if (err) return next(err);
-//        req.online = users;
-//        next();
-//    });
-//});
-
-
-
 app.get('/test', authenticated, function(req, res) {
     console.log('server side auth test passed');
-    res.end(JSON.stringify({'data':'ok'}));
-    // load the single view file (angular will handle the page changes on the front-end)
+    res.end(JSON.stringify(req.user));
 });
 
 passport.serializeUser(function(user, done) {
@@ -79,8 +59,8 @@ passport.use(new GoogleStrategy({
         realm: 'http://localhost:3000/'
     },
     function(identifier, profile, done) {
-        User.findByOpenID({ openId: identifier }, function (err, user) {
-            console.log(profile);
+        profile.id = identifier;
+        User.findByEmailOrSave(profile, function (err, user) {
             return done(err,user);
         });
     }
