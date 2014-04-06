@@ -1,15 +1,20 @@
-
-<div class="container">
-	<form class="form-signin" role="form">
-		<h2 class="form-signin-heading">Please sign in</h2>
-		<input type="email" class="form-control" placeholder="Email address" ng-model="user.username" required autofocus>
-		<input type="password" class="form-control" placeholder="Password" ng-model="user.password" required>
-		<label class="checkbox">
-			<input type="checkbox" value="remember-me" ng-model="user.rememberme"> Remember me
-		</label>
-		<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login();">Sign in</button>
-	</form>
+<div id="modal" class="modal fade in" aria-hidden="false" style="display: block;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>
+			</div>
+			<div class="modal-body">
+				<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
+				<a href="/auth/google" target="_self" title="Sign On with Google OpenID">
+					<img src="img/google.png" width="200">
+				</a>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </div>
-<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
-<a href="/auth/google" target="_self" title="Sign On with Google OpenID"><img src="img/google.png" width="200"></a>
 
