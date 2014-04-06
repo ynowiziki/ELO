@@ -63,6 +63,5 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('authedCtrl', function($scope, $resource){
-    $scope.test = $resource('/test').get();
+    $scope.user = $resource('/test').get();
 }) ;
-
