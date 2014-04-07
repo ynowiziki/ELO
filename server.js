@@ -55,8 +55,8 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new GoogleStrategy({
-        returnURL: 'http://localhost:3000/auth/google/return',
-        realm: 'http://localhost:3000/'
+        returnURL: 'http://localhost:5000/auth/google/return',
+        realm: 'http://localhost:5000/'
     },
     function(identifier, profile, done) {
         profile.id = identifier;
@@ -78,6 +78,6 @@ app.get('/auth/google/return',
         res.redirect('/');
     });
 
-var server = app.listen(3000, function() {
+var server = app.listen(5000, function() {
     console.log('Listening on port %d', server.address().port);
 });
