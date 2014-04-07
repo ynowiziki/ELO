@@ -9,7 +9,8 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
             })
             .when('/401',
             {
-                templateUrl:'/partial/login.html'
+//                templateUrl:'/partial/login.html',
+                controller: 'signOnCtrl'
             })
             .otherwise({
                 templateUrl:'/partial/404.html'
@@ -24,16 +25,18 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                 var status = response.status;
                 if (status === 401  && $location.path()!='/401') {
                     $rootScope.savePath = $location.path();   //save current path for reloading after logged in
-                    $location.path('/401');
-                    return;
+                    $rootScope.signOn = true;
+//                    $location.path('/401');
+//                    document.getElementById('signOnModal').modal('show');
+//                    return;
                 }
                 else if (status === 403) {
                     $location.path("/forbidden");
-                    return;
+//                    return;
                 }
                 else if (status === 404) {
                     $location.path("/404");
-                    return;
+//                    return;
                 }
                 // otherwise
 
@@ -64,4 +67,5 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
 app.controller('authedCtrl', function($scope, $resource){
     $scope.user = $resource('/test').get();
-}) ;
+});
+

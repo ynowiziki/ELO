@@ -90,8 +90,8 @@
 
 		</div>
 
-
 		<hr>
+
 		<h1>This is the home page.</h1>
 		<hr>
 		<h2>Emphasis classes</h2>
@@ -104,11 +104,27 @@
 	<!-- Bootstrap core JavaScript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-
-
+		<div class="modal" ng-show="signOn">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>
+					</div>
+					<div class="modal-body">
+						<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
+						<a href="/auth/google" target="_self" title="Sign On with Google OpenID">
+							<img src="img/google.png" width="200">
+						</a>
+					</div>
+					<div class="modal-footer">
+						<p class="text-muted">At this moment, only Google users can sign on. Sorry for any inconvenience.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/angular-1.1.5.min.js"></script>
+		<script src="js/bootstrap-ui-tpls-0.6.0.js"></script>
+		<script src="js/resource.js"></script>
+		<script src="js/front.js"></script>
 	</body>
-	<script src="js/angular-1.1.5.min.js"></script>
-	<script src="js/bootstrap-ui-tpls-0.6.0.js"></script>
-	<script src="js/resource.js"></script>
-	<script src="js/front.js"></script>
 </html>

@@ -1,8 +1,8 @@
-<div id="modal" class="modal fade in" aria-hidden="false" style="display: block;">
-	<div class="modal-dialog modal-lg">
+<div class="modal" aria-hidden="false">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="close" ng-click="cancel()" >×</button>
 				<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>
 			</div>
 			<div class="modal-body">
@@ -12,7 +12,7 @@
 				</a>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
 			</div>
 		</div>
 	</div>
