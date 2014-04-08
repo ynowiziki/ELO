@@ -19,7 +19,7 @@ var passport = require('passport')
     , GoogleStrategy = require('passport-google').Strategy;
 
 var port = Number(process.env.PORT || 5000);
-var baseUrl = "http://localhost:/"+port;
+var baseUrl = "http://localhost:"+port+'/';
 if (process.env.REDISTOGO_URL) {
     baseUrl = "http://study-colony.herokuapp.com/";
 }
@@ -47,6 +47,10 @@ app.configure('development', function(){
     console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
+app.get('/userInfo', authenticated, function(req, res) {
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    res.end(JSON.stringify(req.session.passport.user));
+});
 app.get('/listComments', authenticated, Comment.list);
 app.post('/saveComment', authenticated, Comment.save);
 
@@ -61,8 +65,8 @@ passport.deserializeUser(function(obj, done) {
 
 
 passport.use(new GoogleStrategy({
-        returnURL: 'http://study-colony.herokuapp.com/auth/google/return',
-        realm: 'http://study-colony.herokuapp.com/'
+        returnURL: baseUrl+ 'auth/google/return',
+        realm: baseUrl
     },
     function(identifier, profile, done) {
         profile.id = identifier;
@@ -80,10 +84,11 @@ app.get('/auth/google',
 app.get('/auth/google/return',
     passport.authenticate('google', { failureRedirect: '/' }),
     function(req, res) {
+//        req.session.user = user;
         // Successful authentication, redirect home.
         res.redirect('/');
     });
-console.log(process.env);
+
 var server = app.listen(port, function() {
     console.log('I am Listening on port %d', server.address().port);
 });

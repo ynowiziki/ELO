@@ -116,3 +116,11 @@ body {
 .modal {
     display: block;
 }
+
+td.nick {
+    width: 60px;
+}
+
+td.date {
+    width: 80px;
+}

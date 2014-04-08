@@ -68,12 +68,21 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('authedCtrl', function($scope, $resource){
-    $scope.comments = $resource('/listComments').get();
+    $scope.user = $resource('/userInfo').get();
+    $scope.comments = $resource('/listComments').query(function() {
+        $scope.sort("date");
+    });
     $scope.submit = function(){
+        $scope.result = {};
         if($scope.comment.nick && $scope.comment.content){
-            var comment = $resource('/saveComment').save($scope.comment, function(){
-                $location.path('/');
+            $scope.result = $resource('/saveComment').save($scope.comment, function(){
+                $scope.comments = $resource('/listComments').query(function() {
+
+                });
             });
+        }
+        else{
+            $scope.result = {status: 'Error: Incomplete Comment.'};
         }
     };
     $scope.cancel = function() {
