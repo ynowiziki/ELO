@@ -1,9 +1,49 @@
 <div ng-show="user.email" class="alert alert-success">
-	<h2>Hi, dear {{user.dname}} </h2>
+	<h2>Hi, dear {{user.dname}}, please leave your comment here: </h2>
 	<hr>
-	<h4 class="text-muted">Here is your profile:</h4>
-	<p class="text-success">Your openID: {{user.id}}</p>
-	<p class="text-primary">Family Name: {{user.fname}}</p>
-	<p class="text-warning">Given  Name: {{user.gname}}</p>
-	<p class="text-info">Email Address: {{user.email}}</p>
+	<form class="form-horizontal">
+		<fieldset>
+			<legend>Comment</legend>
+			<input type="hidden" ng-model="comment.email" value="{{user.email}}">
+			<div class="form-group">
+				<label for="nick" class="col-lg-2 control-label">Your Nick Name</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" id="nick" value="{{user.dname}}" ng-model="comment.nick" placeholder="Your Nick Name" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="content" class="col-lg-2 control-label">Textarea</label>
+				<div class="col-lg-10">
+					<textarea class="form-control" rows="3" id="content" ng-model="comment.content" required></textarea>
+					<span class="help-block">Opinions Or Suggestions On this Study Community Are Highly Appreciated. </span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-10 col-lg-offset-2">
+					<button ng-click="cancel()" class="btn btn-default">Cancel</button>
+					<button type="submit" ng-click="submit()" class="btn btn-primary">Submit</button>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+	<hr>
+	<input type="search" ng-model="q" placeholder="Search in Comments" class="searchBox">
+	<div class="well">
+		<table class="table table-striped table-hover ">
+			<thead>
+				<tr>
+					<th>Nick</th>
+					<th>Comment</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="comment in comments | filter: q"
+				ng-animate="{enter: 'animate-enter', leave:'animate-exit'}"
+				ng-class-odd="'odd'" ng-class-even="'even'">
+					<td> {{comment.nick}} </td>
+					<td>{{comment.content}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>

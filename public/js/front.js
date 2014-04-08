@@ -68,6 +68,17 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('authedCtrl', function($scope, $resource){
-    $scope.user = $resource('/test').get();
+    $scope.comments = $resource('/listComments').get();
+    $scope.submit = function(){
+        if($scope.comment.nick && $scope.comment.content){
+            var comment = $resource('/saveComment').save($scope.comment, function(){
+                $location.path('/');
+            });
+        }
+    };
+    $scope.cancel = function() {
+        $scope.comment.nick = '';
+        $scope.comment.content = '';
+    }
 });
 

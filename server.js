@@ -6,6 +6,7 @@ function authenticated(req, res, next) {
     res.send(401);
 }
 var User = require('./lib/userCache');
+var Comment = require('./lib/commentCache');
 var express = require('express')
     , http = require('http')
     , path = require('path');
@@ -16,6 +17,9 @@ var app = express();
 
 var passport = require('passport')
     , GoogleStrategy = require('passport-google').Strategy;
+
+var baseUrl = "http://study-colony.herokuapp.com/";
+var port = Number(process.env.PORT || 5000);
 
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -40,12 +44,10 @@ app.configure(function(){
 app.configure('development', function(){
     console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    baseUrl = "http://localhost:/"+port;
 });
-
-app.get('/test', authenticated, function(req, res) {
-    console.log('server side auth test passed');
-    res.end(JSON.stringify(req.user));
-});
+app.post('/listComment', authenticated, Comment.list);
+app.post('/saveComment', authenticated, Comment.save);
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -55,7 +57,7 @@ passport.deserializeUser(function(obj, done) {
     done(null, obj);
 });
 
-var port = Number(process.env.PORT || 5000);
+
 
 passport.use(new GoogleStrategy({
         returnURL: 'http://study-colony.herokuapp.com/auth/google/return',
