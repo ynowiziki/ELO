@@ -118,9 +118,9 @@ body {
 }
 
 td.nick {
-    width: 60px;
+    width: 160px;
 }
 
 td.date {
-    width: 180px;
+    width: 320px;
 }

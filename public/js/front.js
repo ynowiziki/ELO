@@ -56,7 +56,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 )
 //
 .run(['$rootScope', '$location',  function ($rootScope, $location) {
-
+    $rootScope.signOn = false;
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
         console.log('===================== route change ==============');
         console.log(event);
