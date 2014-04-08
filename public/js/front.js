@@ -18,6 +18,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         $locationProvider.html5Mode(true);
         var interceptor = ['$location', '$rootScope', '$q', function($location, $rootScope, $q) {
             function success(response) {
+                $rootScope.signOn = false;
                 return response;
             }
 
