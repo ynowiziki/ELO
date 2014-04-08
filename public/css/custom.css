@@ -117,10 +117,6 @@ body {
     display: block;
 }
 
-td.nick {
+td.nick, td.date {
     width: 160px;
-}
-
-td.date {
-    width: 320px;
 }

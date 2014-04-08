@@ -70,7 +70,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 app.controller('authedCtrl', function($scope, $resource){
     $scope.user = $resource('/userInfo').get();
     $scope.comments = $resource('/listComments').query(function() {
-        $scope.sort("date");
+
     });
     $scope.submit = function(){
         $scope.result = {};

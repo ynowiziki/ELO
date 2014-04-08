@@ -21,7 +21,7 @@ var passport = require('passport')
 var port = Number(process.env.PORT || 5000);
 var baseUrl = "http://localhost:"+port+'/';
 if (process.env.REDISTOGO_URL) {
-    baseUrl = "http://study-colony.herokuapp.com/";
+    baseUrl = "http://www.studycolony.com/";
 }
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
