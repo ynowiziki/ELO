@@ -58,8 +58,8 @@ passport.deserializeUser(function(obj, done) {
 var port = Number(process.env.PORT || 5000);
 
 passport.use(new GoogleStrategy({
-        returnURL: 'http://localhost:' + port + '/auth/google/return',
-        realm: 'http://localhost:' + port + '/'
+        returnURL: 'http://study-colony.herokuapp.com/auth/google/return',
+        realm: 'http://study-colony.herokuapp.com/'
     },
     function(identifier, profile, done) {
         profile.id = identifier;
