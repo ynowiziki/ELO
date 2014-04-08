@@ -18,9 +18,11 @@ var app = express();
 var passport = require('passport')
     , GoogleStrategy = require('passport-google').Strategy;
 
-var baseUrl = "http://study-colony.herokuapp.com/";
 var port = Number(process.env.PORT || 5000);
-
+var baseUrl = "http://localhost:/"+port;
+if (process.env.REDISTOGO_URL) {
+    baseUrl = "http://study-colony.herokuapp.com/";
+}
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
     app.use(express.favicon());
@@ -44,7 +46,6 @@ app.configure(function(){
 app.configure('development', function(){
     console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    baseUrl = "http://localhost:/"+port;
 });
 app.get('/listComments', authenticated, Comment.list);
 app.post('/saveComment', authenticated, Comment.save);
