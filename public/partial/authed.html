@@ -26,9 +26,6 @@
 
 	<h2>
 		Comments
-		<small>
-			<input type="search" ng-model="q" placeholder="Search in Comments" class="searchBox pull-right">
-		</small>
 	</h2>
 	<hr>
 	<div>
@@ -36,12 +33,15 @@
 			<thead>
 				<tr>
 					<th>Nick</th>
-					<th>Comment</th>
+					<th>
+						Content
+						<input type="search" ng-model="q" placeholder="Search in Content" class="searchBox pull-right">
+					</th>
 					<th>Date</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="comment in comments | filter: q"
+				<tr ng-repeat="comment in comments  | filter:{content: q}"
 				ng-animate="{enter: 'view-enter', leave:'view-exit'}">
 					<td class="nick"> {{comment.nick}} </td>
 					<td>{{comment.content}}</td>
