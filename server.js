@@ -10,8 +10,8 @@ var express = require('express')
     , http = require('http')
     , path = require('path');
 
-var redis = require('redis');
-var db = redis.createClient();
+//var redis = require('redis');
+//var db = redis.createClient();
 var app = express();
 
 var passport = require('passport')
@@ -38,6 +38,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
+    console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
@@ -54,9 +55,11 @@ passport.deserializeUser(function(obj, done) {
     done(null, obj);
 });
 
+var port = Number(process.env.PORT || 5000);
+
 passport.use(new GoogleStrategy({
-        returnURL: 'http://localhost:5000/auth/google/return',
-        realm: 'http://localhost:5000/'
+        returnURL: 'http://localhost:' + port + '/auth/google/return',
+        realm: 'http://localhost:' + port + '/'
     },
     function(identifier, profile, done) {
         profile.id = identifier;
@@ -77,7 +80,7 @@ app.get('/auth/google/return',
         // Successful authentication, redirect home.
         res.redirect('/');
     });
-
-var server = app.listen(5000, function() {
-    console.log('Listening on port %d', server.address().port);
+console.log(process.env);
+var server = app.listen(port, function() {
+    console.log('I am Listening on port %d', server.address().port);
 });

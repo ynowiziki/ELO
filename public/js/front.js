@@ -30,8 +30,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 //                    document.getElementById('signOnModal').modal('show');
 //                    return;
                 }
-                else if (status === 403) {
-                    $location.path("/forbidden");
+                else if (status === 500) {
+                    $rootScope.signOn = true;
+                    $location.path("/");
 //                    return;
                 }
                 else if (status === 404) {
