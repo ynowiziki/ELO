@@ -68,7 +68,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('authedCtrl', function($scope, $resource){
-    $rootScope.signOn = false;
     $scope.user = $resource('/test').get();
 });
 
