@@ -46,7 +46,7 @@ app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
     baseUrl = "http://localhost:/"+port;
 });
-app.get('/listComment', authenticated, Comment.list);
+app.get('/listComments', authenticated, Comment.list);
 app.post('/saveComment', authenticated, Comment.save);
 
 passport.serializeUser(function(user, done) {
