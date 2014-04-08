@@ -85,9 +85,5 @@ app.controller('authedCtrl', function($scope, $resource){
             $scope.result = {status: 'Error: Incomplete Comment.'};
         }
     };
-    $scope.cancel = function() {
-        $scope.comment.nick = '';
-        $scope.comment.content = '';
-    }
 });
 
