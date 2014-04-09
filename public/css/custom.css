@@ -1,3 +1,5 @@
+@import url(//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css);
+
 .navbar-fixed-top {
     opacity: 0.95;
 }
@@ -132,4 +134,25 @@ input.nick {
     border-radius: 4px;
     font-size: 14px;
     width: 200px;
+}
+
+.animate-hide {
+    -webkit-transition:all linear 0.6s;
+    transition:all linear 0.6s;
+    line-height:20px;
+    opacity:1;
+    padding:10px;
+    border:1px solid black;
+    background:white;
+}
+
+.animate-hide.ng-hide-add,
+.animate-hide.ng-hide-remove {
+    display:block!important;
+}
+
+.animate-hide.ng-hide {
+    line-height:0;
+    opacity:0;
+    padding:0 10px;
 }
