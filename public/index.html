@@ -18,7 +18,7 @@
 		<link href="css/custom.css" rel="stylesheet">
 	</head>
 
-	<body>
+	<body  ng-init="signOn=false">
 		<div class="navbar navbar-default navbar-fixed-top">
 			<div class="container">
 			  <div class="navbar-header">
@@ -85,7 +85,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal" ng-show="signOn" ng-init="signOn=false">
+		{{signOn}}
+		<div class="modal" ng-show="signOn">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
