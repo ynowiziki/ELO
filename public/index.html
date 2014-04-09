@@ -9,7 +9,7 @@
 		<meta name="author" content="coderLMN">
 		<link rel="shortcut icon" href="img/favicon.ico">
 
-		<title>e-learning community</title>
+		<title>Study Colony - a free e-learning community</title>
 
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap-cerulean.min.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 		<link href="css/custom.css" rel="stylesheet">
 	</head>
 
-	<body  ng-init="signOn=false">
+	<body>
 		<div class="navbar navbar-default navbar-fixed-top">
 			<div class="container">
 			  <div class="navbar-header">
@@ -85,7 +85,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal animate-hide" ng-hide="signOn!=true">
+		<div class="modal" ng-hide="!signOn || signOn!=true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
