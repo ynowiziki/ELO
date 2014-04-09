@@ -18,7 +18,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
         $locationProvider.html5Mode(true);
         var interceptor = ['$location', '$rootScope', '$q', function($location, $rootScope, $q) {
             function success(response) {
-                $rootScope.signOn = false;
                 return response;
             }
 
@@ -56,7 +55,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 )
 //
 .run(['$rootScope', '$location',  function ($rootScope, $location) {
-    $rootScope.signOn = false;
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
         console.log('===================== route change ==============');
         console.log(event);

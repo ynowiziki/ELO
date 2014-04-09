@@ -62,8 +62,6 @@ passport.deserializeUser(function(obj, done) {
     done(null, obj);
 });
 
-
-
 passport.use(new GoogleStrategy({
         returnURL: baseUrl+ 'auth/google/return',
         realm: baseUrl
