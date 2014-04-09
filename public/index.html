@@ -15,7 +15,7 @@
 		<!-- Custom styles for this template -->
 		<link href="css/custom.css" rel="stylesheet">
 		<!-- load angularJS lib from Google CDN -->
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
 		<!-- main front-end app -->
 		<script src="js/front.js"></script>
 	</head>
@@ -87,7 +87,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal" ng-hide="!signOn || signOn!=true">
+
+		<div class="modal" ng-show="signOn===true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -106,7 +107,7 @@
 			</div>
 		</div>
 		<!-- Bootstrap core JavaScript
-	================================================== -->
+		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
 		<script src="js/resource.js"></script>
