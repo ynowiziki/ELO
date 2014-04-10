@@ -77,7 +77,6 @@ app.get('/auth/google',
 app.get('/auth/google/return',
     passport.authenticate('google', { failureRedirect: '/' }),
     function(req, res) {
-        req.session.user = req.session.passport.user;
         res.redirect('/');     // Successful authentication, redirect home.
     });
 
