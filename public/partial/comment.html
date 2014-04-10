@@ -44,7 +44,10 @@
 			<tbody>
 				<tr ng-repeat="comment in comments  | filter:{content: q}"
 				ng-animate="{enter: 'view-enter', leave:'view-exit'}">
-					<td><i class="glyphicon glyphicon-user" ng-show="comment.email==user.email"></i></td>
+					<td>
+						<i class="glyphicon glyphicon-user" ng-hide="comment.email==user.email"></i>
+						<img ng-src="{{user.img}}" height="40" class="img-rounded " ng-show="comment.email==user.email">
+					</td>
 					<td class="nick">
 						 {{comment.nick}}
 					</td>
