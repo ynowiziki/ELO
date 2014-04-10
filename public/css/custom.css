@@ -124,7 +124,10 @@ span.glyphicon {
 td.nick, td.date {
     width: 160px;
 }
-
+.navbar-brand {
+    padding: 12px 35px;
+    font-size: 24px;
+}
 input.nick {
     width: 200px;
 }
