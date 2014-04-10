@@ -56,9 +56,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('userCtrl', function($scope, $resource, $location, imageResizeService, $rootScope){
-    $resource('/userInfo').get(function(user){
-        $rootScope.user = user;
-    });
+//    $resource('/userInfo').get(function(user){
+//        $rootScope.user = user;
+//    });
 
     $scope.selectFile = function(element) {    //select image files within the photos directory
             var file = element.files[0];
@@ -86,11 +86,10 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
     $resource('/userInfo').get(function(user){
         $rootScope.user = user;
 
-        $scope.comments = $resource('/listComments').query(function() {
-
-        });
     });
+    $scope.comments = $resource('/listComments').query(function() {
 
+    });
 
     $scope.submit = function(){
         if($scope.cmt.nick && $scope.cmt.content){
