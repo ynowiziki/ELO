@@ -46,11 +46,11 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 //
 .run(['$rootScope', '$location',  function ($rootScope, $location) {
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
-        console.log('===================== route change ==============');
-        console.log(event);
-        console.log(next);
-        console.log(current);
-        console.log('===================== end ==============');
+//        console.log('===================== route change ==============');
+//        console.log(event);
+//        console.log(next);
+//        console.log(current);
+//        console.log('===================== end ==============');
     });
 
 }]);
