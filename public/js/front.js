@@ -83,10 +83,12 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
 });
 app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
     $scope.cmt = {};
-    $resource('/userInfo').get(function(user){
-        $rootScope.user = user;
+    if(! $rootScope.user) {
+        $resource('/userInfo').get(function(user){
+            $rootScope.user = user;
 
-    });
+        });
+    }
     $scope.comments = $resource('/listComments').query(function() {
 
     });
