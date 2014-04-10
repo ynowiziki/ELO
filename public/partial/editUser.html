@@ -13,6 +13,17 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label for="gender" class="col-lg-2 control-label">Gender</label>
+				<div class="col-lg-10" id="gender">
+					<label class="radio-inline">
+						<input type="radio" name="gender" ng-model="user.gender" value="male">  Male
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="gender" ng-model="user.gender" ng-value="female"> Female
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="nick" class="col-lg-2 control-label">Nick Name</label>
 				<div class="col-lg-10">
 					<input type="text" class="form-control nick" id="nick" ng-model="user.nick" placeholder="Your Nick Name" maxlength="200" required>
