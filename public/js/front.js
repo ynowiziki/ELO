@@ -70,7 +70,7 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
         if($scope.user.nick){
             $scope.result = $resource('/saveUser').save($scope.user, function(){
                 $rootScope.user = $resource('/userInfo').get();
-                $location.path("/");
+//                $location.path("/");
             });
         }
         else{
