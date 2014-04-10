@@ -11,8 +11,6 @@ var express = require('express')
     , http = require('http')
     , path = require('path');
 
-//var redis = require('redis');
-//var db = redis.createClient();
 var app = express();
 
 var passport = require('passport')
@@ -37,8 +35,7 @@ app.configure(function(){
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(express.compress());
-    app.use(app.router);
-
+    app.use(app.router)
     app.use(express.static(path.join(__dirname, 'public')));
 
 });
@@ -47,13 +44,11 @@ app.configure('development', function(){
     console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
-app.get('/userInfo', authenticated, function(req, res) {
-    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-    res.end(JSON.stringify(req.session.passport.user));
-});
+
 app.get('/listComments', authenticated, Comment.list);
 app.post('/saveComment', authenticated, Comment.save);
-
+app.post('/saveUser', authenticated, User.save);
+app.get('/userInfo', authenticated, User.getByEmail);
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
@@ -82,11 +77,9 @@ app.get('/auth/google',
 app.get('/auth/google/return',
     passport.authenticate('google', { failureRedirect: '/' }),
     function(req, res) {
-//        req.session.user = user;
-        // Successful authentication, redirect home.
-        res.redirect('/');
+        res.redirect('/');     // Successful authentication, redirect home.
     });
 
 var server = app.listen(port, function() {
-    console.log('I am Listening on port %d', server.address().port);
+    console.log('Listening on port %d', server.address().port);
 });

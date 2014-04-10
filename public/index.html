@@ -73,8 +73,8 @@
 				  </ul>
 
 				  <ul class="nav navbar-nav navbar-right">
-					  <li><a href="http://weibo.com/ned11" target="_blank">by LaoMaNong</a></li>
-					  <li><img src="http://tp2.sinaimg.cn/2154015873/50/5689351571/1"></li>
+					  <li><a href="/editUser">{{user.nick}}</a></li>
+					  <li><img ng-src="{{user.img}}" height="50"></li>
 				  </ul>
 
 			  </div>
@@ -88,6 +88,13 @@
 			</div>
 		</div>
 
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+		<script src="js/resource.js"></script>
+		<script src="js/imageResizeService.js"></script>
+
 		<div class="modal" ng-show="signOn===true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -95,10 +102,12 @@
 						<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>
 					</div>
 					<div class="modal-body">
-						<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
-						<a href="/auth/google" target="_self" title="Sign On with Google OpenID">
-							<img src="img/google.png" width="200">
-						</a>
+						<span class="glyphicon glyphicon-hand-right">
+							<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
+							<a href="/auth/google" target="_self" title="Sign On with Google OpenID">
+								<img src="img/google.png" width="200">
+							</a>
+						</span>
 					</div>
 					<div class="modal-footer">
 						<p class="text-muted">At this moment, only Google users can sign on. Sorry for any inconvenience.</p>
@@ -106,10 +115,5 @@
 				</div>
 			</div>
 		</div>
-		<!-- Bootstrap core JavaScript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
-		<script src="js/resource.js"></script>
 	</body>
 </html>

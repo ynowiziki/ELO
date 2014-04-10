@@ -1,16 +1,13 @@
-
 var app = angular.module('app', ['ngResource', 'ui.bootstrap']);
 app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     function($routeProvider, $locationProvider, $httpProvider){
         $routeProvider
             .when('/',{
-                templateUrl: '/partial/authed.html',
-                controller: 'authedCtrl'
+                templateUrl: '/partial/comment.html',
+                controller: 'commentCtrl'
             })
-            .when('/401',
-            {
-//                templateUrl:'/partial/login.html',
-                controller: 'signOnCtrl'
+            .when('/editUser',{
+                templateUrl:'/partial/editUser.html'
             })
             .otherwise({
                 templateUrl:'/partial/404.html'
@@ -26,29 +23,22 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                 if (status === 401  && $location.path()!='/401') {
                     $rootScope.savePath = $location.path();   //save current path for reloading after logged in
                     $rootScope.signOn = true;
-//                    $location.path('/401');
-//                    document.getElementById('signOnModal').modal('show');
-//                    return;
                 }
                 else if (status === 500) {
                     $rootScope.signOn = true;
                     $location.path("/");
-//                    return;
                 }
                 else if (status === 404) {
                     $location.path("/404");
-//                    return;
                 }
                 // otherwise
 
                 return $q.reject(response);
-
             }
 
             return function (promise) {
                 return promise.then(success, error);
             }
-
         }];
         $httpProvider.responseInterceptors.push(interceptor);
     }]
@@ -65,15 +55,39 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
 }]);
 
-app.controller('authedCtrl', function($scope, $resource){
-    $scope.user = $resource('/userInfo').get();
+app.controller('userCtrl', function($scope, $resource, $location, imageResizeService, $rootScope){
+    $rootScope.user = $resource('/userInfo').get();
+
+    $scope.selectFile = function(element) {    //select image files within the photos directory
+            var file = element.files[0];
+            imageResizeService.resize(file, function(canvas){
+                $scope.user.img = canvas.toDataURL(file.type);
+                $scope.$apply();
+            });
+    };
+    $scope.saveUserInfo = function(){
+        $scope.result = {};
+        if($scope.user.nick){
+            $scope.result = $resource('/saveUser').save($scope.user, function(){
+                $rootScope.user = $resource('/userInfo').get();
+                $location.path("/");
+            });
+        }
+        else{
+            $scope.result = {status : 'no nick name'};
+        }
+    };
+});
+app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
+    $rootScope.user = $resource('/userInfo').get();
+    $scope.cmt = {};
     $scope.comments = $resource('/listComments').query(function() {
 
     });
+
     $scope.submit = function(){
-        $scope.result = {};
-        if($scope.comment.nick && $scope.comment.content){
-            $scope.result = $resource('/saveComment').save($scope.comment, function(){
+        if($scope.cmt.nick && $scope.cmt.content){
+            $scope.result = $resource('/saveComment').save($scope.cmt, function(){
                 $scope.comments = $resource('/listComments').query(function() {
 
                 });
@@ -83,5 +97,4 @@ app.controller('authedCtrl', function($scope, $resource){
             $scope.result = {status: 'Error: Incomplete Comment.'};
         }
     };
-});
-
+})
