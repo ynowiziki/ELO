@@ -1,6 +1,6 @@
 app.service('imageResizeService', function() {
     this.resize = function(file, fn){
-        var dimension = 300;            //dimension of the target image, which will be saved in IndexedDB
+        var dimension = 160;            //dimension of the target image, which will be saved in IndexedDB
 
         var fileLoader = new FileReader(),
             canvas = document.createElement('canvas'),

@@ -63,7 +63,7 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
     $scope.selectFile = function(element) {    //select image files within the photos directory
             var file = element.files[0];
             imageResizeService.resize(file, function(canvas){
-                $scope.user.img = canvas.toDataURL(file.type);
+                $scope.user.img = canvas.toDataURL("image/jpeg");
                 $scope.$apply();
             });
     };
