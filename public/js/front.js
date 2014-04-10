@@ -81,6 +81,7 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
 app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
     $rootScope.user = $resource('/userInfo').get();
     $scope.cmt = {};
+//    $scope.cmt.nick = $rootScope.user.nick;
     $scope.comments = $resource('/listComments').query(function() {
 
     });

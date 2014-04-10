@@ -32,6 +32,7 @@
 		<table class="table table-hover ">
 			<thead>
 				<tr>
+					<th></th>
 					<th>Nick</th>
 					<th>
 						Content
@@ -43,8 +44,9 @@
 			<tbody>
 				<tr ng-repeat="comment in comments  | filter:{content: q}"
 				ng-animate="{enter: 'view-enter', leave:'view-exit'}">
+					<td><i class="glyphicon glyphicon-user" ng-show="comment.email==user.email"></i></td>
 					<td class="nick">
-						<i class="glyphicon glyphicon-user" ng-show="comment.email==user.email"></i> {{comment.nick}}
+						 {{comment.nick}}
 					</td>
 					<td>{{comment.content}}</td>
 					<td class="date">{{comment.date | date: "short"}}</td>
