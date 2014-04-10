@@ -82,14 +82,15 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
     };
 });
 app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
+    $scope.cmt = {};
     $resource('/userInfo').get(function(user){
         $rootScope.user = user;
-    });
-    $scope.cmt = {};
-//    $scope.cmt.nick = $rootScope.user.nick;
-    $scope.comments = $resource('/listComments').query(function() {
 
+        $scope.comments = $resource('/listComments').query(function() {
+
+        });
     });
+
 
     $scope.submit = function(){
         if($scope.cmt.nick && $scope.cmt.content){
