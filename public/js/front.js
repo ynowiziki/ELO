@@ -56,7 +56,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('userCtrl', function($scope, $resource, $location, imageResizeService, $rootScope){
-    $rootScope.user = $resource('/userInfo').get();
+    $resource('/userInfo').get(function(user){
+        $rootScope.user = user;
+    });
 
     $scope.selectFile = function(element) {    //select image files within the photos directory
             var file = element.files[0];
@@ -69,8 +71,9 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
         $scope.result = {};
         if($scope.user.nick){
             $scope.result = $resource('/saveUser').save($scope.user, function(){
-                $rootScope.user = $resource('/userInfo').get();
-//                $location.path("/");
+                $resource('/userInfo').get(function(user){
+                    $rootScope.user = user;
+                });
             });
         }
         else{
@@ -79,7 +82,9 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
     };
 });
 app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
-    $rootScope.user = $resource('/userInfo').get();
+    $resource('/userInfo').get(function(user){
+        $rootScope.user = user;
+    });
     $scope.cmt = {};
 //    $scope.cmt.nick = $rootScope.user.nick;
     $scope.comments = $resource('/listComments').query(function() {
