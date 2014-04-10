@@ -48,10 +48,7 @@ app.configure('development', function(){
 app.get('/listComments', authenticated, Comment.list);
 app.post('/saveComment', authenticated, Comment.save);
 app.post('/saveUser', authenticated, User.save);
-app.get('/userInfo', authenticated, function(req,res){
-    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-    res.end(JSON.stringify(req.session.passport.user));
-});
+app.get('/userInfo', authenticated, User.info);
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
