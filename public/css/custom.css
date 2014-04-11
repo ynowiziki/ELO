@@ -2,6 +2,7 @@
 
 .navbar-fixed-top {
     opacity: 0.95;
+    background-image: url("../img/logo.png");
 }
 
 body {

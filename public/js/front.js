@@ -56,10 +56,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.controller('userCtrl', function($scope, $resource, $location, imageResizeService, $rootScope){
-//    $resource('/userInfo').get(function(user){
-//        $rootScope.user = user;
-//    });
-
     $scope.selectFile = function(element) {    //select image files within the photos directory
         var file = element.files[0];
         imageResizeService.resize(file, function(canvas){
