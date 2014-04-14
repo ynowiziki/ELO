@@ -2,13 +2,15 @@
 
 .navbar-fixed-top {
     opacity: 0.95;
-    padding-left: 15px;
+    padding-left: 12px;
     background-image : url("../img/logo.png");
 }
 .navbar-nav.navbar-right:last-child {
     margin-right: 10px;
 }
-
+.navbar-toggle {
+    margin-right: 5px;
+}
 body {
     padding-top: 40px;
     padding-bottom: 40px;

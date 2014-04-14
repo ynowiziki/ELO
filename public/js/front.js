@@ -55,7 +55,6 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
 }]);
 app.controller('menuCtrl',function($scope) {
-    console.log('menu');
     $scope.in = ''
     $scope.toggleCollapsed = function(){
         if($scope.in == ''){
