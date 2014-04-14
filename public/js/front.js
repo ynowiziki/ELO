@@ -91,7 +91,17 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
 });
 app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
     $scope.cmt = {};
-    $scope.source ="be who you are and say what you feel";
+
+    if(document.getElementById("speak").webkitSpeech === undefined) {
+        $scope.source = "ERROR: Speech input is not supported in your browser, please use Chrome.";
+        $scope.messageType = "danger";
+        $scope.webkitSpeech = false;
+    }
+    else {
+        $scope.source ="be who you are and say what you feel";
+        $scope.messageType = "success";
+        $scope.webkitSpeech = true;
+    }
 
     $scope.$watch('speak', function () {           //catch any change to total pages available
         if($scope.speak == $scope.source){

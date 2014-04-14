@@ -2,12 +2,12 @@
 	<br>
 	<div class='alert alert-info well-sm'>
 		<h4>(Chrome Only) Little Practice: Click the microphone icon and read the following line:</h4>
-		<blockquote>
+		<blockquote class="text-{{messageType}}">
 			{{source}}  <i class="glyphicon glyphicon--chevron-right"></i>
-			<input type="text" class="form-control speech pull-right" x-webkit-speech ng-model="speak"/>
+			<input type="text" id="speak" class="form-control speech pull-right" x-webkit-speech ng-model="speak" ng-show="webkitSpeech"/>
 		</blockquote>
 
-		<p class="text-info pull-right">result: {{equal}}</p>  <br>
+		<p class="text-info pull-right" ng-show="webkitSpeech">result: {{equal}}</p>  <br>
 	</div>
 	<h3>Hi {{user.nick}}, please leave your comment here: </h3>
 	<hr>
