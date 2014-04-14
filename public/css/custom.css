@@ -2,7 +2,11 @@
 
 .navbar-fixed-top {
     opacity: 0.95;
+    padding-left: 15px;
     background-image : url("../img/logo.png");
+}
+.navbar-nav.navbar-right:last-child {
+    margin-right: 10px;
 }
 
 body {
@@ -10,6 +14,11 @@ body {
     padding-bottom: 40px;
     background-color: #eee;
     overflow-x: hidden;
+}
+
+.modal-dialog {
+    width: 540px;
+    margin: 60px auto;
 }
 
 .form-signin {

@@ -54,7 +54,18 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     });
 
 }]);
-
+app.controller('menuCtrl',function($scope) {
+    console.log('menu');
+    $scope.in = ''
+    $scope.toggleCollapsed = function(){
+        if($scope.in == ''){
+            $scope.in = 'in'
+        }
+        else {
+            $scope.in = ''
+        }
+    }
+});
 app.controller('userCtrl', function($scope, $resource, $location, imageResizeService, $rootScope){
     $scope.selectFile = function(element) {    //select image files within the photos directory
         var file = element.files[0];
