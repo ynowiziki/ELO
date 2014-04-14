@@ -19,7 +19,7 @@ body {
 }
 
 .modal-dialog {
-    width: 540px;
+    max-width: 540px;
     margin: 60px auto;
 }
 
@@ -134,14 +134,14 @@ span.glyphicon {
     font-size: 30px;
 }
 td.nick, td.date {
-    width: 160px;
+    max-width: 160px;
 }
 .navbar-brand {
     padding: 12px 35px;
     font-size: 24px;
 }
 input.nick {
-    width: 200px;
+    max-width: 200px;
 }
 
 textarea.content, input.content {
