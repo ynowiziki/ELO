@@ -1,4 +1,4 @@
-
+//auth middleware, will be put in the RESTful APIs which require authentication
 function authenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -17,8 +17,8 @@ var passport = require('passport')
     , GoogleStrategy = require('passport-google').Strategy;
 
 var port = Number(process.env.PORT || 5000);
-var baseUrl = "http://localhost:"+port+'/';
-if (process.env.REDISTOGO_URL) {
+var baseUrl = "http://localhost:"+port+'/';    //development environment
+if (process.env.REDISTOGO_URL) {               //Heroku production enrironment
     baseUrl = "http://www.studycolony.com/";
 }
 app.configure(function(){
@@ -34,7 +34,7 @@ app.configure(function(){
     // persistent login sessions (recommended).
     app.use(passport.initialize());
     app.use(passport.session());
-    app.use(express.compress());
+    app.use(express.compress());     //transfer http packages in gzip compressed format
     app.use(app.router)
     app.use(express.static(path.join(__dirname, 'public')));
 
@@ -63,7 +63,7 @@ passport.use(new GoogleStrategy({
     },
     function(identifier, profile, done) {
         profile.id = identifier;
-        User.findByEmailOrSave(profile, function (err, user) {
+        User.findByEmailOrSave(profile, function (err, user) {      //store new user base information
             return done(err,user);
         });
     }
@@ -80,6 +80,6 @@ app.get('/auth/google/return',
         res.redirect('/');     // Successful authentication, redirect home.
     });
 
-var server = app.listen(port, function() {
+var server = app.listen(port, function() {        //start app server
     console.log('Listening on port %d', server.address().port);
 });
