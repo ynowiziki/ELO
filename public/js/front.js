@@ -54,6 +54,8 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     });
 
 }]);
+
+//I wrote this manual control of collapse nav-bar in a kind of hack way, because I really don't want to import jQuery
 app.controller('menuCtrl',function($scope) {
     $scope.in = ''
     $scope.toggleCollapsed = function(){
@@ -89,6 +91,16 @@ app.controller('userCtrl', function($scope, $resource, $location, imageResizeSer
 });
 app.controller('commentCtrl', function($scope, $resource, $location, $rootScope){
     $scope.cmt = {};
+    $scope.source ="be who you are and say what you feel";
+
+    $scope.$watch('speak', function () {           //catch any change to total pages available
+        if($scope.speak == $scope.source){
+            $scope.equal =  'right!';
+        }
+        else {
+            $scope.equal =  'try again!';
+        }
+    });
     if(! $rootScope.user) {
         $resource('/userInfo').get(function(user){
             $rootScope.user = user;

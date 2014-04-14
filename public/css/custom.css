@@ -143,7 +143,9 @@ td.nick, td.date {
 input.nick {
     max-width: 200px;
 }
-
+input.speech {
+    max-width: 300px;
+}
 textarea.content, input.content {
     width: 80%;
 }
