@@ -180,3 +180,19 @@ textarea.content, input.content {
     opacity:0;
     padding:0 10px;
 }
+
+#remoteVideos video {
+    border-radius: 10px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    height: 150px;
+    margin-right: 15px;
+}
+#localVideo {
+    padding:4px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 150px;
+}

@@ -9,6 +9,10 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
             .when('/editUser',{                            //user profile
                 templateUrl:'/partial/editUser.html'
             })
+            .when('/p2p', {
+                templateUrl: '/partial/peer.html',
+                controller: 'peerCtrl'
+            })
             .otherwise({
                 templateUrl:'/partial/404.html'            //other path
             });
@@ -129,4 +133,19 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
             $scope.result = {status: 'Error: Incomplete Comment.'};
         }
     };
-})
+});
+//use simpleWebRTC (https://github.com/henrikjoreteg/SimpleWebRTC ) to provide P2P video chat
+app.controller('peerCtrl', function($scope){
+    var webrtc = new SimpleWebRTC({
+        // the id/element dom element that will hold "our" video
+        localVideoEl: 'localVideo',
+        // the id/element dom element that will hold remote videos
+        remoteVideosEl: 'remoteVideos',
+        // immediately ask for camera access
+        autoRequestMedia: true
+    });
+    webrtc.on('readyToCall', function () {
+        // you can name it anything
+        webrtc.joinRoom('test');
+    });
+});
