@@ -135,17 +135,27 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
     };
 });
 //use simpleWebRTC (https://github.com/henrikjoreteg/SimpleWebRTC ) to provide P2P video chat
-app.controller('peerCtrl', function($scope){
-    var webrtc = new SimpleWebRTC({
-        // the id/element dom element that will hold "our" video
-        localVideoEl: 'localVideo',
-        // the id/element dom element that will hold remote videos
-        remoteVideosEl: 'remoteVideos',
-        // immediately ask for camera access
-        autoRequestMedia: true
-    });
-    webrtc.on('readyToCall', function () {
-        // you can name it anything
-        webrtc.joinRoom('test');
-    });
+app.controller('peerCtrl', function($scope, $location){
+    $scope.join = function(){
+        if($scope.topic){
+            $scope.webrtc = new SimpleWebRTC({
+                // the id/element dom element that will hold "our" video
+                localVideoEl: 'localVideo',
+                // the id/element dom element that will hold remote videos
+                remoteVideosEl: 'remoteVideos',
+                // immediately ask for camera access
+                autoRequestMedia: true
+            });
+            $scope.webrtc.on('readyToCall', function () {
+                // you can name it anything
+                $scope.webrtc.joinRoom($scope.topic);
+            });
+        }
+    }
+
+    $scope.quit = function(){
+        $scope.webrtc.stopLocalVideo();
+        $scope.webrtc.leaveRoom();
+        $location.path("/");
+    }
 });
