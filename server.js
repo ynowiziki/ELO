@@ -5,6 +5,7 @@ function authenticated(req, res, next) {
     }
     res.send(401);
 }
+var UserDAO = require('./lib/userDAO');
 var User = require('./lib/userCache');
 var Comment = require('./lib/commentCache');
 var express = require('express')
@@ -47,6 +48,7 @@ app.configure('development', function(){
 
 app.get('/listComments', authenticated, Comment.list);
 app.post('/saveComment', authenticated, Comment.save);
+app.get('/newUser', authenticated, UserDAO.insert);
 app.post('/saveUser', authenticated, User.save);
 app.get('/userInfo', authenticated, User.info);
 passport.serializeUser(function(user, done) {

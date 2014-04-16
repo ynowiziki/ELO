@@ -13,6 +13,10 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                 templateUrl: '/partial/peer.html',
                 controller: 'peerCtrl'
             })
+            .when('/new', {
+                templateUrl: '/partial/new.html',
+                controller: 'newCtrl'
+            })
             .otherwise({
                 templateUrl:'/partial/404.html'            //other path
             });
@@ -55,6 +59,12 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
 }]);
 
+
+app.controller('newCtrl',function($scope, $resource) {
+    $resource('/newUser').query(function(users){           //test mongodb
+        $scope.newUser = users;
+    });
+});
 //I wrote this manual control of collapse nav-bar in a kind of hack way, because I really don't want to import jQuery
 app.controller('menuCtrl',function($scope) {
     $scope.in = ''                       //this is the class for the collapsed menu items
@@ -138,24 +148,29 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
 app.controller('peerCtrl', function($scope, $location){
     $scope.join = function(){
         if($scope.topic){
-            $scope.webrtc = new SimpleWebRTC({
-                // the id/element dom element that will hold "our" video
-                localVideoEl: 'localVideo',
-                // the id/element dom element that will hold remote videos
-                remoteVideosEl: 'remoteVideos',
-                // immediately ask for camera access
-                autoRequestMedia: true
-            });
+            if(! $scope.webrtc) {
+                $scope.webrtc = new SimpleWebRTC({
+                    // the id/element dom element that will hold "our" video
+                    localVideoEl: 'localVideo',
+                    // the id/element dom element that will hold remote videos
+                    remoteVideosEl: 'remoteVideos',
+                    // immediately ask for camera access
+                    autoRequestMedia: true
+                });
+            }
             $scope.webrtc.on('readyToCall', function () {
                 // you can name it anything
                 $scope.webrtc.joinRoom($scope.topic);
             });
+            console.log($scope.webrtc);
         }
     }
 
     $scope.quit = function(){
+        console.log($scope.webrtc);
         $scope.webrtc.stopLocalVideo();
         $scope.webrtc.leaveRoom();
+        console.log($scope.webrtc);
         $location.path("/");
     }
 });
