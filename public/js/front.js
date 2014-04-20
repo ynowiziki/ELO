@@ -233,7 +233,7 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
             $scope.result = $resource('/saveComment').save($scope.cmt, function(){
                 $resource('/listComments').query(function(commentList) {
-                    $scope.comments = commentList.sort(function(a,b){return a.getTime() - b.getTime()});
+                    $scope.comments = commentList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
                     $scope.loading = "";                              //list all the comments after comment being saved
                 });
             });

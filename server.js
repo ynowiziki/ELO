@@ -95,7 +95,7 @@ var mailServer  = email.server.connect({
 });
 app.get('/listComments', authenticated, function(req, res) {
     res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-    db.collection('comment').find({}, {sort:{date:-1}}).toArray(function(err, commentList) {
+    db.collection('comment').find().toArray(function(err, commentList) {
         for(var i in commentList){
             commentList[i].date = Date.parse(commentList[i].date);
         }
