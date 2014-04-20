@@ -76,10 +76,9 @@ app.controller('loginCtrl',function($scope, $resource, $location, $rootScope) {
         if($scope.user.email && $scope.user.password){
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
             $resource('/login').save($scope.user, function(result){
-//                $scope.info = result;
                 if(result && result.success){
-                    console.log(result);
-                    if($rootScope.savePath){
+                    $rootScope.user = result.user;
+                    if($rootScope.savePath != '/login'){
                         var savePath = $rootScope.savePath;
                         $rootScope.savePath = '';
                         $location.path(savePath);
@@ -103,8 +102,6 @@ app.controller('loginCtrl',function($scope, $resource, $location, $rootScope) {
         if($scope.user.email){
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
             $resource('/forget/'+$scope.user.email).get(function(result){
-                console.log(result);
-//                console.log(err);
                 $scope.info = result;
                 $scope.loading = "";
             });
@@ -222,20 +219,21 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
         }
     });
     if(! $rootScope.user) {
-        $resource('/userInfo').get(function(user){ //load user profile initially
+        $resource('/userInfo').get(function(user){ //load user profile when user refreshes the home page
             $rootScope.user = user;
-
         });
     }
+    $scope.loading = "fa fa-spinner fa-spin fa-3x";
     $scope.comments = $resource('/listComments').query(function() {
-                                                   //load all the comments
+        $scope.loading = "";                                           //load all the comments
     });
 
     $scope.submit = function(){
         if($scope.cmt.nick && $scope.cmt.content){
+            $scope.loading = "fa fa-spinner fa-spin fa-3x";
             $scope.result = $resource('/saveComment').save($scope.cmt, function(){
                 $scope.comments = $resource('/listComments').query(function() {
-                                                   //list all the comments after comment being saved
+                    $scope.loading = "";                              //list all the comments after comment being saved
                 });
             });
         }

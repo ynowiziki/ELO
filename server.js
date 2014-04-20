@@ -140,7 +140,6 @@ app.post('/signOn', function(req, res){
                     res.end(JSON.stringify({status : 'failed'}));
                 }
                 else{
-                    console.log(user);
                     mailServer.send({
                         attachment: [ {data:    "<html><h4>Hello " + user.nick + ", <br><br>Welcome to our free e-learning community! <br>Please click <a href=" + baseUrl+"activate/" + user._id+ ">this link</a> to activate your user account. </h4><i>best regards,</i><hr> <i>Study Colony</i></html>", alternative:true}],
                         from:    "Study Colony<teamofelc@gmail.com>",
@@ -209,9 +208,6 @@ app.get('/reset/:id', function(req, res){
 });
 
 app.post('/resetPassword', function(req, res){
-    console.log('-------  req.body ---------');
-    console.log(req.body);
-    console.log('---------------------------');
     var id = req.body.id;
     var password = req.body.password;
     hashPassword(password, function(hash){
@@ -253,7 +249,7 @@ app.post('/login',
     passport.authenticate('local', { failureMessage: 'Incorrect email or password.' }),
     function(req, res) {
         res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-        res.end(JSON.stringify({success: true}));
+        res.end(JSON.stringify({success: true, user:req.session.passport.user}));
     });
 
 app.get('/logout', function(req, res){
