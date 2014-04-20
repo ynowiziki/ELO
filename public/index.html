@@ -10,17 +10,23 @@
 		<link rel="shortcut icon" href="img/favicon.ico">
 
 		<title>Study Colony - a free e-learning community</title>
+		<!--Google fonts-->
+		<!--<link href='http://fonts.googleapis.com/css?family=McLaren' rel='stylesheet' type='text/css'>-->
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap-cerulean.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="css/custom.css" rel="stylesheet">
+		<!--font awesome-->
+		<link href="fontAwesome/css/font-awesome.min.css" rel="stylesheet">
+		<!--flip effect from http://daneden.me/animate/-->
+		<link href="css/animate.css" rel="stylesheet">
 		<!-- load angularJS lib from Google CDN -->
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
 		<!-- main front-end app -->
 		<script src="js/front.js"></script>
 	</head>
 
-	<body>
+	<body class="google-font">
 		<div class="navbar navbar-default navbar-fixed-top" ng-controller="menuCtrl">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse" ng-click="toggleCollapsed()">
@@ -53,8 +59,9 @@
 					</form>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/editUser"><i class="glyphicon glyphicon-cog"></i> {{user.nick}}</a></li>
+					<li><a href="/editUser"><i class="fa fa-cog {{spin}}"></i> {{user.nick}}</a></li>
 					<li><img ng-src="{{user.img}}" height="50"></li>
+					<li><a href="/logout" target="_self" ng-show="user.email"><i class="fa fa-power-off"></i> Logout</a></li>
 				</ul>
 			</div>
 		</div>
@@ -69,29 +76,29 @@
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
 		<script src="js/resource.js"></script>
 		<script src="js/imageResizeService.js"></script>
-		<script src="http://simplewebrtc.com/latest.js"></script>
+		<script src="js/simpleWebRTC.js"></script>
 
-		<div class="modal" ng-show="signOn===true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>
-					</div>
-					<div class="modal-body">
-						<span class="glyphicon glyphicon-hand-right">
-							<!-- target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider -->
-							<a href="/auth/google" target="_self" title="Sign On with Google OpenID">
-								<img src="img/google.png" width="150">
-							</a>
-						</span>
-					</div>
-					<div class="modal-footer">
-						<p class="text-muted">
-							At this moment, only Google users can sign on. Sorry for any inconvenience.
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
+		<!--<div class="modal" ng-show="signOn===true">-->
+			<!--<div class="modal-dialog">-->
+				<!--<div class="modal-content">-->
+					<!--<div class="modal-header">-->
+						<!--<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>-->
+					<!--</div>-->
+					<!--<div class="modal-body">-->
+						<!--<span class="glyphicon glyphicon-hand-right">-->
+							<!--&lt;!&ndash; target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider &ndash;&gt;-->
+							<!--<a href="/auth/google" target="_self" title="Sign On with Google OpenID">-->
+								<!--<img src="img/google.png" width="150">-->
+							<!--</a>-->
+						<!--</span>-->
+					<!--</div>-->
+					<!--<div class="modal-footer">-->
+						<!--<p class="text-muted">-->
+							<!--At this moment, only Google users can sign on. Sorry for any inconvenience.-->
+						<!--</p>-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
 	</body>
 </html>

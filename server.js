@@ -1,3 +1,7 @@
+var express = require('express')
+    , http = require('http')
+    , path = require('path')
+    , bcrypt = require('bcrypt');
 //auth middleware, will be put in the RESTful APIs which require authentication
 function authenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -5,17 +9,26 @@ function authenticated(req, res, next) {
     }
     res.send(401);
 }
+
+function hashPassword(password, fn){
+    bcrypt.genSalt(12, function(err, salt){
+        if (err) console.log(err);
+        bcrypt.hash(password, salt, function(err, hash){
+            if (err) console.log(err);
+            fn(hash);
+        })
+    });
+};
 var UserDAO = require('./lib/userDAO');
+var CommentDAO = require('./lib/commentDAO');
 var User = require('./lib/userCache');
 var Comment = require('./lib/commentCache');
-var express = require('express')
-    , http = require('http')
-    , path = require('path');
+
 
 var app = express();
 
 var passport = require('passport')
-    , GoogleStrategy = require('passport-google').Strategy;
+    , LocalStrategy = require('passport-local').Strategy;
 
 var port = Number(process.env.PORT || 5000);
 var baseUrl = "http://localhost:"+port+'/';    //development environment
@@ -24,7 +37,7 @@ if (process.env.REDISTOGO_URL) {               //Heroku production enrironment
 }
 app.configure(function(){
     app.set('port', process.env.PORT || 3000);
-    app.use(express.favicon());
+//    app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.json());
     app.use(express.urlencoded());
@@ -33,6 +46,7 @@ app.configure(function(){
     app.use(express.session({ secret: 'keyboard cat' }));
     // Initialize Passport!  Also use passport.session() middleware, to support
     // persistent login sessions (recommended).
+    app.use(clientErrorHandler);
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(express.compress());     //transfer http packages in gzip compressed format
@@ -45,12 +59,208 @@ app.configure('development', function(){
     console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
+function clientErrorHandler(err, req, res, next) {
+    if (req.xhr) {
+        res.send(500, { error: 'Something blew up!' });
+    } else {
+        next(err);
+    }
+};
+//Reuse MongoDB connection pool
+var uri;
+if (process.env.MONGOLAB_URI) {
+    uri = process.env.MONGOLAB_URI;
+} else {           //development environment
+    uri = 'mongodb://localhost:27017/studyColony';
+}
+// Initialize connection once
+var MongoClient = require('mongodb').MongoClient
+    , ObjectID = require('mongodb').ObjectID
+    , format = require('util').format;
+var db, server;
+MongoClient.connect(uri,{server: {auto_reconnect: true}}, function(err, mongo) {
+    if(err) console.log(err);
+    db = mongo;
+    server = app.listen(port, function() {        //start app server after mongodb is connected
+        console.log('Listening on port %d', server.address().port);
+        require('./lib/bootstrap').init()
+    });
+});
+var email   = require("emailjs/email");
+var mailServer  = email.server.connect({
+    user:    "teamofelc",
+    password:"vfrtgb123",
+    host:    "smtp.gmail.com",
+    ssl:     true
+});
+app.get('/listComments', authenticated, function(req, res) {
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('comment').find({}, {sort:{date:-1}}).toArray(function(err, commentList) {
+        for(var i in commentList){
+            commentList[i].date = Date.parse(commentList[i].date);
+        }
+        res.end(JSON.stringify(commentList));
+    });
+});
+app.post('/saveComment', authenticated, function(req, res){
+    var email = req.session.passport.user.email;
+    var comment = req.body;
+    comment.email = email;
+    comment.date = new Date();
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('comment').insert(comment, function(err, comment) {
+        res.end(JSON.stringify({status : 'ok'}));
+    });
+});
 
-app.get('/listComments', authenticated, Comment.list);
-app.post('/saveComment', authenticated, Comment.save);
-app.get('/newUser', authenticated, UserDAO.insert);
-app.post('/saveUser', authenticated, User.save);
-app.get('/userInfo', authenticated, User.info);
+app.post('/saveUser', authenticated, function(req, res){
+    var email = req.session.passport.user.email;
+    var userProfile = req.body;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('user').update({email: email}, {$set: userProfile}, function(err, user) {
+        if(err) console.log(err);
+        res.end(JSON.stringify({status : 'user profile updated.'}));
+    });
+});
+app.post('/signOn', function(req, res){
+    var userProfile = req.body;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('user').findOne({email: userProfile.email},function(err, user) {
+        if(err) {
+            console.log(err);
+            res.end(JSON.stringify({status : 'failed'}));
+        }
+        else if(user){
+            res.end(JSON.stringify({status : 'exist'}));
+        }
+        else{
+            db.collection('user').insert(userProfile, function(err, user) {
+                if(err) {
+                    console.log(err);
+                    res.end(JSON.stringify({status : 'failed'}));
+                }
+                else{
+                    console.log(user);
+                    mailServer.send({
+                        attachment: [ {data:    "<html><h4>Hello " + user.nick + ", <br><br>Welcome to our free e-learning community! <br>Please click <a href=" + baseUrl+"activate/" + user._id+ ">this link</a> to activate your user account. </h4><i>best regards,</i><hr> <i>Study Colony</i></html>", alternative:true}],
+                        from:    "Study Colony<teamofelc@gmail.com>",
+                        to:      user.email,
+                        subject: "Welcome to StudyColony"
+                    }, function(err, message) {
+                        if(err) {
+                            console.log(err);
+                            res.end(JSON.stringify({status : 'failed to register, please try again later.'}));
+                        }
+                        else{
+                            res.end(JSON.stringify({status : 'registered, please check your email.'}));
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+app.get('/userInfo', authenticated, function(req, res){
+    var email = req.session.passport.user.email;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('user').findOne({email: email}, function(err, user) {
+        res.end(JSON.stringify(user));
+    });
+});
+
+app.get('/forget/:email', function(req, res){
+    var email = req.params.email;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('user').findOne({email: email}, function(err, user) {
+        if(user){
+            var resetID = new ObjectID();
+            db.collection('user').update({email: email}, {$set: {resetID: resetID}},function(err, result) {
+                mailServer.send({
+                    attachment: [ {data:    "<html><h4>Hello " + user.nick + ",<br>Please click <a href=" + baseUrl+"reset/" + resetID+ ">this link</a> to reset your password. <br></h4><hr> <i>Study Colony</i></html>", alternative:true}],
+                    from:    "Study Colony<teamofelc@gmail.com>",
+                    to:      user.email,
+                    subject: "Reset your password"
+                }, function(err, message) {
+                    if(err) {
+                        console.log(err);
+                        res.end(JSON.stringify({status : 'Failed to send mail, please try again later.'}));
+                    }
+                    else{
+                        res.end(JSON.stringify({status : 'Reset mail has been sent to: '+email+'.'}));
+                    }
+                });
+            });
+        }
+        else{
+            res.end(JSON.stringify({status : 'This user account does not exist.'}));
+        }
+    });
+
+});
+
+app.get('/reset/:id', function(req, res){
+    var id = req.params.id;
+    res.setHeader('Content-Type', 'text/html; charset="utf-8"');
+    db.collection('user').findOne({resetID: new ObjectID(id)}, function(err, user) {
+        if(user){
+            res.send("<!DOCTYPE html><html><head><title>Reset Password</title></head><body><style type='text/css'>body{margin:10%; width:50%}form {display: inline-block;}button{background-color: #0078e7;color: #fff;font-size: 100%;text-decoration: none;border-radius: 2px;display: inline-block;line-height: normal;white-space: nowrap;vertical-align: baseline;text-align: center;cursor: pointer;padding: .5em 1em;border: 0 rgba(0,0,0,0);}input{padding: .5em .6em;display: inline-block;border: 1px solid #ccc;box-shadow: inset 0 1px 3px #ddd;border-radius: 4px;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}.pull-right{float: right}</style><h2>Reset Password<img class='pull-right' src='/img/logo.png'>  </h2><hr><form action='/resetPassword' method='post'><input type='hidden' name='id' value='"+id+"'><input type='password'  name='password' placeholder='New Password' maxlength='20' required><br><button type='submit'>Reset</button></form></body></html>");
+        }
+    });
+});
+
+app.post('/resetPassword', function(req, res){
+    console.log('-------  req.body ---------');
+    console.log(req.body);
+    console.log('---------------------------');
+    var id = req.body.id;
+    var password = req.body.password;
+    hashPassword(password, function(hash){
+        if(hash){
+            db.collection('user').update({resetID: new ObjectID(id)}, {$set: {password: hash}, $unset:{resetID:''}}, function(err, user) {
+                if(err) console.log(err);
+                else
+                res.send("<h2>Your password has been changed successfully.<br>Please click <a href=" + baseUrl+ "> the link </a> to login.</h2>");
+             });
+        }
+        else{
+            res.send('<h2>Your password is NOT changed, please try again later.</h2>');
+        }
+    });
+});
+
+app.get('/activate/:id', function(req, res){
+    var id = req.params.id;
+    res.setHeader('Content-Type', 'text/html; charset="utf-8"');
+    db.collection('user').findOne({_id: new ObjectID(id)}, function(err, user) {
+        if(err) console.log(err);
+        hashPassword(user.password, function(hash){
+            if(hash){
+                db.collection('user').update({_id: new ObjectID(id)}, {$set: {password: hash}}, function(err, user) {
+                    res.send("<h2>Your account is activated.<br>Please click <a href=" + baseUrl+ "> the link </a> to login.</h2>");
+                });
+            }
+            else{
+                res.send('<h2>Your account is NOT activated, please try again later.</h2>');
+            }
+        });
+    });
+});
+app.get('/login', function(req, res){
+    res.redirect('/');
+});
+
+app.post('/login',
+    passport.authenticate('local', { failureMessage: 'Incorrect email or password.' }),
+    function(req, res) {
+        res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+        res.end(JSON.stringify({success: true}));
+    });
+
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
@@ -59,29 +269,24 @@ passport.deserializeUser(function(obj, done) {
     done(null, obj);
 });
 
-passport.use(new GoogleStrategy({
-        returnURL: baseUrl+ 'auth/google/return',
-        realm: baseUrl
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password'
     },
-    function(identifier, profile, done) {
-        profile.id = identifier;
-        User.findByEmailOrSave(profile, function (err, user) {      //store new user base information
-            return done(err,user);
+    function(username, password, done) {
+        db.collection('user').findOne({ email: username }, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) {
+                return done(null, false, { message: 'Incorrect username.' });
+            }
+            bcrypt.compare(password, user.password, function(err, res) {
+                if(! res) {
+                    return done(null, false, { message: 'Incorrect password.' });
+                }
+                else{
+                    return done(null, user);
+                }
+            });
         });
     }
 ));
-
-app.get('/auth/google',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    function(req, res) {
-        res.redirect('/');
-    });
-app.get('/auth/google/return',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    function(req, res) {
-        res.redirect('/');     // Successful authentication, redirect home.
-    });
-
-var server = app.listen(port, function() {        //start app server
-    console.log('Listening on port %d', server.address().port);
-});

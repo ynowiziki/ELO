@@ -4,7 +4,7 @@
 		<h4>(Chrome Only) Little Practice: Click the microphone icon and read the following line:</h4>
 		<blockquote class="text-{{messageType}}">
 			{{source}}  <i class="glyphicon glyphicon--chevron-right"></i>
-			<input type="text" id="speak" class="form-control speech pull-right" x-webkit-speech ng-model="speak" ng-show="webkitSpeech"/>
+			<input type="text" id="speak" class="form-control middle pull-right" x-webkit-speech ng-model="speak" ng-show="webkitSpeech"/>
 		</blockquote>
 
 		<p class="text-info pull-right" ng-show="webkitSpeech">result: {{equal}}</p>  <br>
@@ -15,13 +15,13 @@
 		<div class="form-group">
 			<label for="nick" class="col-lg-2 control-label">Nick Name</label>
 			<div class="col-lg-10">
-				<input type="text" class="form-control nick" id="nick" ng-model="cmt.nick" placeholder="Your Nick Name" maxlength="200" required>
+				<input type="text" class="form-control small" id="nick" ng-model="cmt.nick" placeholder="Your Nick Name" maxlength="200" required>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="content" class="col-lg-2 control-label">Content</label>
 			<div class="col-lg-10">
-				<textarea class="form-control content" rows="3" id="content" ng-model="cmt.content" placeholder="Comment  (within 2000 characters)" maxlength="2000" required></textarea>
+				<textarea class="form-control middle" rows="3" id="content" ng-model="cmt.content" placeholder="Comment  (within 2000 characters)" maxlength="2000" required></textarea>
 				<span class="help-block">Opinions or suggestions on this study community are highly appreciated. </span>
 			</div>
 		</div>
@@ -52,10 +52,10 @@
 				<tr ng-repeat="comment in comments  | filter:{content: q}"
 				ng-animate="{enter: 'view-enter', leave:'view-exit'}">
 					<td>
-						<i class="glyphicon glyphicon-user" ng-hide="comment.email==user.email"></i>
+						<i class="fa fa-user fa-fw" ng-hide="comment.email==user.email"></i>
 						<img ng-src="{{user.img}}" height="40" class="img-rounded " ng-show="comment.email==user.email">
 					</td>
-					<td class="nick">
+					<td class="small">
 						 {{comment.nick}}
 					</td>
 					<td>{{comment.content}}</td>

@@ -17,7 +17,18 @@ body {
     background-color: #eee;
     overflow-x: hidden;
 }
-
+.google-font{
+    font-family: 'McLaren', cursive;
+}
+@font-face {
+    font-family: 'McLaren';
+    font-style: normal;
+    font-weight: 400;
+    src: local('McLaren'), local('McLaren-Regular'), url(google.woff) format('woff');
+}
+.loginPane{
+    background-color: black;
+}
 .modal-dialog {
     max-width: 540px;
     margin: 60px auto;
@@ -140,11 +151,13 @@ td.nick, td.date {
     padding: 12px 35px;
     font-size: 24px;
 }
-input.nick {
+input.small {
     max-width: 200px;
+    margin-bottom: 6px;
 }
-input.speech {
+input.middle {
     max-width: 300px;
+    margin-bottom: 6px;
 }
 textarea.content, input.content {
     width: 80%;
@@ -195,4 +208,16 @@ textarea.content, input.content {
     -moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);
     box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);
     height: 150px;
+}
+
+.jumbotron {
+    margin-right: 1%;
+    width: 99%;
+    border: 1px solid #ccc;
+    -webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0;
 }
