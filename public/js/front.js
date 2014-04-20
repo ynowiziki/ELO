@@ -232,7 +232,8 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
         if($scope.cmt.nick && $scope.cmt.content){
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
             $scope.result = $resource('/saveComment').save($scope.cmt, function(){
-                $scope.comments = $resource('/listComments').query(function() {
+                $resource('/listComments').query(function(commentList) {
+                    $scope.comments = commentList.sort(function(a,b){return a.getTime() - b.getTime()});
                     $scope.loading = "";                              //list all the comments after comment being saved
                 });
             });
