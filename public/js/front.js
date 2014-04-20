@@ -224,7 +224,8 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
         });
     }
     $scope.loading = "fa fa-spinner fa-spin fa-3x";
-    $scope.comments = $resource('/listComments').query(function() {
+    $resource('/listComments').query(function(commentList) {
+        $scope.comments = commentList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
         $scope.loading = "";                                           //load all the comments
     });
 
