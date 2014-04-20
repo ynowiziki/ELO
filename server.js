@@ -83,7 +83,7 @@ MongoClient.connect(uri,{server: {auto_reconnect: true}}, function(err, mongo) {
     db = mongo;
     server = app.listen(port, function() {        //start app server after mongodb is connected
         console.log('Listening on port %d', server.address().port);
-        require('./lib/bootstrap').init()
+//        require('./lib/bootstrap').init()
     });
 });
 var email   = require("emailjs/email");
