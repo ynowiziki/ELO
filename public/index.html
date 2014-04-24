@@ -10,7 +10,7 @@
 		<link rel="shortcut icon" href="img/favicon.ico">
 
 		<title>Study Colony - a free e-learning community</title>
-		<!--Google fonts-->
+		<!--Google fonts stored in local-->
 		<!--<link href='http://fonts.googleapis.com/css?family=McLaren' rel='stylesheet' type='text/css'>-->
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap-cerulean.min.css" rel="stylesheet">
@@ -20,8 +20,8 @@
 		<link href="fontAwesome/css/font-awesome.min.css" rel="stylesheet">
 		<!--flip effect from http://daneden.me/animate/-->
 		<link href="css/animate.css" rel="stylesheet">
-		<!-- load angularJS lib from Google CDN -->
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+		<!-- load angularJS lib from local instead of Google CDN, because Google access in China is unstable -->
+		<script src="js/angular.1.1.5.min.js"></script>
 		<!-- main front-end app -->
 		<script src="js/front.js"></script>
 	</head>
@@ -43,13 +43,12 @@
 					<li class="dropdown disabled">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/new">MongoDB Test</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
+							<li><a href="/comment">Comment</a></li>
+							<li class="divider"></li>
+							<li><a href="/test">Tests</a></li>
 							<li class="divider"></li>
 							<li class="dropdown-header">Dropdown header</li>
-							<li><a href="#">Separated link</a></li>
-							<li><a href="#">One more separated link</a></li>
+							<li><a href="/voice" target="_self">Nothing</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -73,9 +72,10 @@
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+		<script src="js/ui-bootstrap-tpls-0.6.0.min.js"></script>
 		<script src="js/resource.js"></script>
 		<script src="js/imageResizeService.js"></script>
+		<script src="js/IndexedDBService.js"></script>
 		<script src="js/simpleWebRTC.js"></script>
 
 		<!--<div class="modal" ng-show="signOn===true">-->
