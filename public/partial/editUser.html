@@ -4,9 +4,9 @@
 		<hr>
 		<form class="form-horizontal">
 			<div class="form-group">
-				<label for="nick" class="col-lg-2 control-label">Photo</label>
+				<label for="img" class="col-lg-2 control-label">Photo</label>
 				<div class="col-lg-2">
-					<input type="file" accept="image/*" onchange="angular.element(this).scope().selectFile(this)">
+					<input type="file" accept="image/*" id="img" onchange="angular.element(this).scope().selectFile(this)">
 				</div>
 				<div class="col-lg-3">
 					<img  ng-src="{{user.img}}" width="120" class="img-rounded img-list">

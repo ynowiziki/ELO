@@ -9,11 +9,19 @@
 				<form class="form-horizontal" name="signIn">
 					<div class="input-group margin-bottom-sm">
 						<span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-						<input type="email" class="form-control" id="userEmail" ng-model="user.email" placeholder="Your Login Email" maxlength="200">
+						<input type="email" class="form-control" list="userList" id="userEmail" ng-model="user.email" placeholder="Your Login Email" maxlength="200">
+						<datalist id="userList">
+							<option ng-repeat="login in userList" value="{{login.email}}">
+						</datalist>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
 						<input type="password" class="form-control" id="userPassword" ng-model="user.password" placeholder="Your Password" maxlength="200">
+					</div>
+					<div class="input-group">
+						<label class="checkbox-inline">
+							<input type="checkbox" name="rememberPassword" ng-model="user.rememberPassword" value="true">  Remeber Password
+						</label>
 					</div>
 					<br>
 					<button type="submit" ng-click="login()" class="btn btn-primary">Login</button>
