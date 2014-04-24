@@ -32,7 +32,7 @@ var passport = require('passport')
 
 var port = Number(process.env.PORT || 5000);
 var baseUrl = "http://localhost:"+port+'/';    //development environment
-if (process.env.REDISTOGO_URL) {               //Heroku production enrironment
+if (process.env.REDISTOGO_URL) {   //Heroku production enrironment
     baseUrl = "http://www.studycolony.com/";
 }
 app.configure(function(){
@@ -93,22 +93,36 @@ var mailServer  = email.server.connect({
     host:    "smtp.gmail.com",
     ssl:     true
 });
-app.get('/listComments', authenticated, function(req, res) {
+app.get('/show/:col/:id', authenticated, function(req, res) {
+    var col = req.params.col;
+    var id = req.params.id;
     res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-    db.collection('comment').find().toArray(function(err, commentList) {
-        for(var i in commentList){
-            commentList[i].date = Date.parse(commentList[i].date);
-        }
-        res.end(JSON.stringify(commentList));
+    db.collection(col).findOne({_id: new ObjectID(id)}, function(err, data) {
+        res.end(JSON.stringify(data));
     });
 });
-app.post('/saveComment', authenticated, function(req, res){
-    var email = req.session.passport.user.email;
-    var comment = req.body;
-    comment.email = email;
-    comment.date = new Date();
+app.get('/list/:col', authenticated, function(req, res) {
+    var col = req.params.col;
     res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-    db.collection('comment').insert(comment, function(err, comment) {
+    db.collection(col).find().toArray(function(err, dataList) {
+        for(var i in dataList){
+            dataList[i].date = Date.parse(dataList[i].date);
+            if(dataList[i].content.length > 200){
+                dataList[i].content = dataList[i].content.substring(0,200) + '...';
+            }
+        }
+        res.end(JSON.stringify(dataList));
+    });
+});
+app.post('/save/:col', authenticated, function(req, res){
+    var email = req.session.passport.user.email;
+    var col = req.params.col;
+    var record = req.body;
+    record.email = email;
+    record.date = new Date();
+    record.content = record.content.substring(0,60000);
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection(col).insert(record, function(err, result) {
         res.end(JSON.stringify({status : 'ok'}));
     });
 });
@@ -135,27 +149,27 @@ app.post('/signOn', function(req, res){
         }
         else{
             db.collection('user').insert(userProfile, function(err, user) {
-                if(err) {
-                    console.log(err);
-                    res.end(JSON.stringify({status : 'failed'}));
-                }
-                else{
-                    mailServer.send({
-                        attachment: [ {data:    "<html><h4>Hello " + user.nick + ", <br><br>Welcome to our free e-learning community! <br>Please click <a href=" + baseUrl+"activate/" + user._id+ ">this link</a> to activate your user account. </h4><i>best regards,</i><hr> <i>Study Colony</i></html>", alternative:true}],
-                        from:    "Study Colony<teamofelc@gmail.com>",
-                        to:      user.email,
-                        subject: "Welcome to StudyColony"
-                    }, function(err, message) {
-                        if(err) {
-                            console.log(err);
-                            res.end(JSON.stringify({status : 'failed to register, please try again later.'}));
-                        }
-                        else{
-                            res.end(JSON.stringify({status : 'registered, please check your email.'}));
-                        }
-                    });
-                }
-            });
+    if(err) {
+        console.log(err);
+        res.end(JSON.stringify({status : 'failed'}));
+    }
+    else{
+        mailServer.send({
+            attachment: [ {data:    "<html><h4>Hello " + user.nick + ", <br><br>Welcome to our free e-learning community! <br>Please click <a href=" + baseUrl+"activate/" + user._id+ ">this link</a> to activate your user account. </h4><i>best regards,</i><hr> <i>Study Colony</i></html>", alternative:true}],
+            from:    "Study Colony<teamofelc@gmail.com>",
+            to:      user.email,
+            subject: "Welcome to StudyColony"
+        }, function(err, message) {
+            if(err) {
+                console.log(err);
+                res.end(JSON.stringify({status : 'failed to register, please try again later.'}));
+            }
+            else{
+                res.end(JSON.stringify({status : 'registered, please check your email.'}));
+            }
+        });
+    }
+});
         }
     });
 });
@@ -181,11 +195,11 @@ app.get('/forget/:email', function(req, res){
                     subject: "Reset your password"
                 }, function(err, message) {
                     if(err) {
-                        console.log(err);
-                        res.end(JSON.stringify({status : 'Failed to send mail, please try again later.'}));
+            console.log(err);
+            res.end(JSON.stringify({status : 'Failed to send mail, please try again later.'}));
                     }
                     else{
-                        res.end(JSON.stringify({status : 'Reset mail has been sent to: '+email+'.'}));
+            res.end(JSON.stringify({status : 'Reset mail has been sent to: '+email+'.'}));
                     }
                 });
             });
@@ -206,7 +220,9 @@ app.get('/reset/:id', function(req, res){
         }
     });
 });
-
+app.get('/voice', function(req,res){
+    res.sendfile('./public/html/voiceRecognition.html');
+});
 app.post('/resetPassword', function(req, res){
     var id = req.body.id;
     var password = req.body.password;

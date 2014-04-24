@@ -1,0 +1,24 @@
+<div>
+	<div id="speechTest" ng-show="user.email">
+		<div class="controls col-lg-2" style="position: fixed">
+			<img ng-src="{{course.img}}" title="{{course.name" class="img-rounded"><br>
+			<h4>{{course.name}}</h4>
+			Author : <a href="/" title="/show/user/{{course.author.id}}">{{course.author.nick}}</a> <br>
+			<hr>
+			<button class="btn btn-info pull-right" ng-click="listen()">Read This Article</button><br>
+			<hr>
+			<b>Speed: {{rate*100}}% </b><br>
+			<input type="range" ng-model="rate" min="0.8" max="1.2" step="0.2" />
+		</div>
+		<hr>
+		<div class="col-lg-9 col-lg-offset-3">
+			<button class="btn btn-primary full-width" ng-click="toggleShow()" ng-show="showText">Hide Text</button>
+			<button class="btn full-width" ng-click="toggleShow()" ng-hide="showText">Show Text</button>
+			<blockquote ng-show="showText" class="book">
+				<p ng-repeat="para in paragraphs">
+					{{para.text}}
+				</p>
+			</blockquote>
+		</div>
+	</div>
+</div>

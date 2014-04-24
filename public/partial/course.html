@@ -1,0 +1,35 @@
+<div>
+	<div>
+		<h3>Courses <a class="btn btn-info pull-right" href="/create">Create New Course</a></h3>
+		<hr>
+		<div>
+			<table class="table table-hover ">
+				<thead>
+				<tr>
+					<th>Author</th>
+					<th>Name</th>
+					<th>
+						Content
+						<input type="search" ng-model="q" placeholder="Search in Content" class="searchBox pull-right">
+					</th>
+					<th>Date</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="course in courses  | filter:{content: q}"
+					ng-animate="{enter: 'view-enter', leave:'view-exit'}">
+					<td>
+						{{course.author.nick}}
+					</td>
+					<td class="small">
+						<img ng-src="{{course.img}}" width="50"> <br>
+						<a href='/course/{{course._id}}'>{{course.name}}</a>
+					</td>
+					<td>{{course.content}}</td>
+					<td class="date">{{course.date | date: "short"}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
