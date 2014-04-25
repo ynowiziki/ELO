@@ -101,6 +101,10 @@ app.factory('speech', ['$rootScope', function ($rootScope) {
         msg.text = text;
 
         speechSynthesis.speak(msg);
+
+        msg.onend = function(e){
+            $rootScope.$broadcast('endOfSpeech');     //notify course controller the end of the reading
+        }
     }
     function pause(){
         if(speechSynthesis.speaking){
@@ -117,9 +121,7 @@ app.factory('speech', ['$rootScope', function ($rootScope) {
             speechSynthesis.cancel();
         }
     }
-    msg.onend = function(e){
-        $rootScope.$broadcast('endOfSpeech');     //notify course controller the end of the reading
-    }
+
     return {
         sayText: sayIt , pause:pause, resume:resume, cancel:cancel
     };
