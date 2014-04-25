@@ -81,7 +81,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 
 }]);
 
-app.factory('speech', function () {
+app.factory('speech', ['$rootScope', function ($rootScope) {
     if(window.speechSynthesis && typeof SpeechSynthesisUtterance === 'function') {
         var msg = new SpeechSynthesisUtterance();
         //calling get voices method first scaffolds it for
@@ -117,10 +117,13 @@ app.factory('speech', function () {
             speechSynthesis.cancel();
         }
     }
+    msg.onend = function(e){
+        $rootScope.$broadcast('endOfSpeech');     //notify course controller the end of the reading
+    }
     return {
         sayText: sayIt , pause:pause, resume:resume, cancel:cancel
     };
-});
+}]);
 
 app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech', '$routeParams', function ($scope, $rootScope, $resource, speech, $routeParams) {
     $resource('/show/course/'+ $routeParams.id).get(function(course){
@@ -179,6 +182,12 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
             $scope.operation = 'fa fa-pause';
         }
     }
+    $scope.$on('endOfSpeech', function(){     //accept broadcast notification from speech service
+        $scope.started = false;
+        $scope.playing = false;
+        $scope.operation = 'fa fa-play';
+        $scope.$apply();
+    });
     $scope.toggleShow = function() {
         $scope.showText = !$scope.showText;
     }
