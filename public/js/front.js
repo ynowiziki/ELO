@@ -141,15 +141,9 @@ app.controller('courseListCtrl',['$scope', '$rootScope', '$resource', 'speech', 
         $scope.loading = "fa fa-spinner fa-spin fa-3x";
         $resource('/list/course').query(function(courseList) {
             $scope.courses = courseList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+            $rootScope.greeting = '';
             $scope.loading = "";                                           //load all the comments
         });
-        $scope.greeting = 'Hi new user, welcome to study colony. Please click the up right setup icon to update your profile.';
-        if($rootScope.user.nick){
-            $scope.greeting = 'Hi ' + $rootScope.user.nick + ', welcome to Study Colony!' ;
-        }
-        if ('speechSynthesis' in window) {      // Synthesis the greeting voice
-            speech.sayText($scope.greeting, null);
-        }
     }
 }]);
 app.controller('courseCreateCtrl',['$scope', '$rootScope', '$resource', '$location', 'imageResizeService', function ($scope, $rootScope, $resource, $location, imageResizeService) {
@@ -289,7 +283,7 @@ app.controller('peerCtrl', function($scope, $location){
     }
 });
 
-app.controller('loginCtrl',function($scope, $resource, $location, IndexedDBService, $rootScope) {
+app.controller('loginCtrl',['$scope', '$rootScope', '$resource', '$location', 'IndexedDBService', 'speech', function ($scope, $rootScope, $resource, $location, IndexedDBService, speech) {
     $scope.user = {};
     $scope.info = {};
     $scope.userList = [];
@@ -323,6 +317,13 @@ app.controller('loginCtrl',function($scope, $resource, $location, IndexedDBServi
                 if(result && result.success){
                     //load user profile and redirect to the original path before user authentication
                     $rootScope.user = result.user;
+                    $rootScope.greeting = 'Hi new user, welcome to study colony. Please click the up right setup icon to update your profile.';
+                    if($rootScope.user.nick){
+                        $rootScope.greeting = 'Hi ' + $rootScope.user.nick + ', welcome to Study Colony!' ;
+                    }
+                    if ('speechSynthesis' in window) {      // Synthesis the greeting voice
+                        speech.sayText($rootScope.greeting, null);
+                    }
                     if($rootScope.savePath != '/login'){
                         var savePath = $rootScope.savePath;
                         $rootScope.savePath = '';
@@ -407,4 +408,4 @@ app.controller('loginCtrl',function($scope, $resource, $location, IndexedDBServi
             document.getElementById("newUserPassword").required = true;
         }
     };
-});
+}]);

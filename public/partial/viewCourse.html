@@ -1,9 +1,11 @@
 <div>
 	<div id="speechTest" ng-show="user.email">
 		<div class="controls col-lg-2" style="position: fixed">
+			<a href="/"><i class="fa fa-arrow-left fa-2x"></i> Back to course list</a>  <br>
+			<hr>
 			<img ng-src="{{course.img}}" title="{{course.name" class="img-rounded"><br>
 			<h4>{{course.name}}</h4>
-			Author : <a href="/" title="/show/user/{{course.author.id}}">{{course.author.nick}}</a> <br>
+			Author : <b>{{course.author.nick}}</b> <br>
 			<hr>
 			<button class="btn btn-info pull-right" ng-click="listen()">Read This Article</button><br>
 			<hr>

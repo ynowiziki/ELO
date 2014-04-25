@@ -220,8 +220,9 @@ app.get('/reset/:id', function(req, res){
         }
     });
 });
-app.get('/voice', function(req,res){
-    res.sendfile('./public/html/voiceRecognition.html');
+app.get('/voice', authenticated, function(req,res){
+//    res.sendfile('./public/html/voiceRecognition.html');              //This is the one will be implemented later
+    res.send('<h2>This is a undeveloped feature. Please allow a few days to get it done.</h2>');        //temporary response
 });
 app.post('/resetPassword', function(req, res){
     var id = req.body.id;
