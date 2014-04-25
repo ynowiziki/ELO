@@ -264,7 +264,7 @@ app.get('/login', function(req, res){
 });
 
 app.post('/login',
-    passport.authenticate('local', { failureMessage: 'Incorrect email or password.' }),
+    passport.authenticate('local', { failureRedirect: '/' }),
     function(req, res) {
         res.setHeader('Content-Type', 'application/json; charset="utf-8"');
         res.end(JSON.stringify({success: true, user:req.session.passport.user}));
