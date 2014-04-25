@@ -149,27 +149,28 @@ app.post('/signOn', function(req, res){
         }
         else{
             db.collection('user').insert(userProfile, function(err, user) {
-    if(err) {
-        console.log(err);
-        res.end(JSON.stringify({status : 'failed'}));
-    }
-    else{
-        mailServer.send({
-            attachment: [ {data:    "<html><h4>Hello " + user.nick + ", <br><br>Welcome to our free e-learning community! <br>Please click <a href=" + baseUrl+"activate/" + user._id+ ">this link</a> to activate your user account. </h4><i>best regards,</i><hr> <i>Study Colony</i></html>", alternative:true}],
-            from:    "Study Colony<teamofelc@gmail.com>",
-            to:      user.email,
-            subject: "Welcome to StudyColony"
-        }, function(err, message) {
-            if(err) {
-                console.log(err);
-                res.end(JSON.stringify({status : 'failed to register, please try again later.'}));
-            }
-            else{
-                res.end(JSON.stringify({status : 'registered, please check your email.'}));
-            }
-        });
-    }
-});
+                if(err) {
+                    console.log(err);
+                    res.end(JSON.stringify({status : 'failed'}));
+                }
+                else{
+                    mailServer.send({
+                        attachment: [ {data:    "<html><h4>Hello " + user[0].nick + ", <br><br>Welcome to our free e-learning community! <br>Please click <a href=" + baseUrl+"activate/" + user[0]._id+ ">this link</a> to activate your user account. </h4><i>best regards,</i><hr> <i>Study Colony</i></html>", alternative:true}],
+                        from:    "Study Colony<teamofelc@gmail.com>",
+                        to:      user[0].email,
+                        subject: "Welcome to StudyColony"
+                    }, function(err, message) {
+                        if(err) {
+                            console.log(err);
+                            console.log(message);
+                            res.end(JSON.stringify({status : 'failed to register, please try again later.'}));
+                        }
+                        else{
+                            res.end(JSON.stringify({status : 'registered, please check your email.'}));
+                        }
+                    });
+                }
+            });
         }
     });
 });
@@ -195,11 +196,11 @@ app.get('/forget/:email', function(req, res){
                     subject: "Reset your password"
                 }, function(err, message) {
                     if(err) {
-            console.log(err);
-            res.end(JSON.stringify({status : 'Failed to send mail, please try again later.'}));
+                        console.log(err);
+                        res.end(JSON.stringify({status : 'Failed to send mail, please try again later.'}));
                     }
                     else{
-            res.end(JSON.stringify({status : 'Reset mail has been sent to: '+email+'.'}));
+                        res.end(JSON.stringify({status : 'Reset mail has been sent to: '+email+'.'}));
                     }
                 });
             });
