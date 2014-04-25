@@ -52,7 +52,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
                         $rootScope.savePath = $location.path();   //save current path for reloading after logged in
                     }
                     $location.path("/login");
-                    return response;
+//                    return response;
                 }
                 else if (status === 500) {
                     $rootScope.signOn = true;
@@ -82,7 +82,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 }]);
 
 app.factory('speech', function () {
-    if(window.speechSynthesis) {
+    if(window.speechSynthesis && typeof SpeechSynthesisUtterance === 'function') {
         var msg = new SpeechSynthesisUtterance();
         //calling get voices method first scaffolds it for
         //use in say method

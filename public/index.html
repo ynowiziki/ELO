@@ -65,6 +65,7 @@
 			</div>
 		</div>
 		<div class="col-sm-offset-1 col-sm-10 well-sm">
+			<h2 id="warn" class="text-danger"></h2>
 			<div ng-view="index" ng-animate="{enter: 'view-enter', leave:'rotateRight'}" class="well-large">
 			</div>
 		</div>
@@ -72,33 +73,15 @@
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
+		<script>
+			if(! window.chrome){
+				document.getElementById("warn").innerHTML = "Please use Chrome to visit this site, because some of the features are only supported by Chrome at this moment. <a href='https://www.google.com/intl/zh-CN/chrome/browser/'>Download link</a>";
+			}
+		</script>
 		<script src="js/ui-bootstrap-tpls-0.6.0.min.js"></script>
 		<script src="js/resource.js"></script>
 		<script src="js/imageResizeService.js"></script>
 		<script src="js/IndexedDBService.js"></script>
 		<script src="js/simpleWebRTC.js"></script>
-
-		<!--<div class="modal" ng-show="signOn===true">-->
-			<!--<div class="modal-dialog">-->
-				<!--<div class="modal-content">-->
-					<!--<div class="modal-header">-->
-						<!--<h4 class="modal-title">To Proceed, You Need to Sign On with Google OpenID</h4>-->
-					<!--</div>-->
-					<!--<div class="modal-body">-->
-						<!--<span class="glyphicon glyphicon-hand-right">-->
-							<!--&lt;!&ndash; target="_self" is vital for this path being handled directly, bypassing angularJS $routeProvider &ndash;&gt;-->
-							<!--<a href="/auth/google" target="_self" title="Sign On with Google OpenID">-->
-								<!--<img src="img/google.png" width="150">-->
-							<!--</a>-->
-						<!--</span>-->
-					<!--</div>-->
-					<!--<div class="modal-footer">-->
-						<!--<p class="text-muted">-->
-							<!--At this moment, only Google users can sign on. Sorry for any inconvenience.-->
-						<!--</p>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
 	</body>
 </html>
