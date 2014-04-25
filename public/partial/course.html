@@ -1,9 +1,11 @@
 <div>
 	<div>
 		<h4 class="text-warning">{{greeting}}</h4>
-		<h3>Courses <a class="btn btn-info pull-right" href="/create">Create New Course</a></h3>
+		<h3>Courses <a class="btn btn-info pull-right" href="/create"><i class="fa fa-plus"></i> Create New Course</a></h3>
 		<hr>
+		<i class="{{loading}}"></i>
 		<div>
+			<button class="btn btn-primary" ng-click="refresh()"><i class="fa fa-refresh"></i> Refresh</button><br>
 			<table class="table table-hover ">
 				<thead>
 				<tr>

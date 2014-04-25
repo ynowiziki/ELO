@@ -138,13 +138,16 @@ app.controller('courseListCtrl',['$scope', '$rootScope', '$resource', 'speech', 
         });
     }
     else{
+        $scope.refresh();
+    };
+    $scope.refresh = function(){
         $scope.loading = "fa fa-spinner fa-spin fa-3x";
         $resource('/list/course').query(function(courseList) {
             $scope.courses = courseList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
             $rootScope.greeting = '';
             $scope.loading = "";                                           //load all the comments
         });
-    }
+    };
 }]);
 app.controller('courseCreateCtrl',['$scope', '$rootScope', '$resource', '$location', 'imageResizeService', function ($scope, $rootScope, $resource, $location, imageResizeService) {
     $scope.course = {};
