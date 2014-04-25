@@ -102,8 +102,23 @@ app.factory('speech', function () {
 
         speechSynthesis.speak(msg);
     }
+    function pause(){
+        if(speechSynthesis.speaking){
+            speechSynthesis.pause();
+        }
+    }
+    function resume(){
+        if(speechSynthesis.paused){
+            speechSynthesis.resume();
+        }
+    }
+    function cancel(){
+        if(speechSynthesis.speaking || speechSynthesis.paused){
+            speechSynthesis.cancel();
+        }
+    }
     return {
-        sayText: sayIt
+        sayText: sayIt , pause:pause, resume:resume, cancel:cancel
     };
 });
 
@@ -116,6 +131,9 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
         });
     });
     $scope.rate = 1;
+    $scope.started = false;
+    $scope.playing = false;
+    $scope.operation = 'fa fa-play';
     $scope.listen = function () {
         var config = {
                 rate: $scope.rate
@@ -123,9 +141,44 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
 
         if(window.speechSynthesis) {               //read the text
             speech.sayText($scope.course.content, config);
+            $scope.playing = true;
+            $scope.started = true;
         }
     }
-
+    $scope.pause = function () {
+        if(window.speechSynthesis) {               //read the text
+            speech.pause();
+            $scope.playing = false;
+        }
+    }
+    $scope.resume = function () {
+        if(window.speechSynthesis) {               //read the text
+            speech.resume();
+            $scope.playing = true;
+        }
+    }
+    $scope.cancel = function () {
+        if(window.speechSynthesis) {               //read the text
+            speech.cancel();
+            $scope.started = false;
+            $scope.playing = false;
+            $scope.operation = 'fa fa-play';
+        }
+    }
+    $scope.togglePlay = function(){
+        if(!$scope.started) {
+            $scope.listen();
+            $scope.operation = 'fa fa-pause';
+        }
+        else if($scope.playing){
+            $scope.pause();
+            $scope.operation = 'fa fa-play';
+        }
+        else {
+            $scope.resume();
+            $scope.operation = 'fa fa-pause';
+        }
+    }
     $scope.toggleShow = function() {
         $scope.showText = !$scope.showText;
     }
