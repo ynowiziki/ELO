@@ -11,6 +11,7 @@
 				<thead>
 				<tr>
 					<th>Author</th>
+					<th>Image</th>
 					<th>Name</th>
 					<th>
 						Content
@@ -25,8 +26,10 @@
 					<td>
 						{{course.author.nick}}
 					</td>
+					<td>
+						<img ng-src="{{course.img}}" width="50">
+					</td>
 					<td class="small">
-						<img ng-src="{{course.img}}" width="50"> <br>
 						<a href='/course/{{course._id}}'>{{course.name}}</a>
 					</td>
 					<td>{{course.content}}</td>
