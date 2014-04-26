@@ -126,7 +126,25 @@ app.post('/save/:col', authenticated, function(req, res){
         res.end(JSON.stringify({status : 'ok'}));
     });
 });
-
+app.post('/save/comment/:id', authenticated, function(req, res){
+    var email = req.session.passport.user.email;
+    var id = req.params.id;
+    var record = req.body;
+    record.email = email;
+    record.date = new Date();
+    record.content = record.content.substring(0,2000);
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('course').update({'_id': new ObjectID(id)}, {$push: {comments: record}}, function(err, result) {
+        res.end(JSON.stringify({status : 'ok'}));
+    });
+});
+app.get('/list/comment/:id', authenticated, function(req, res){
+    var id = req.params.id;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('course').findOne({'_id': new ObjectID(id)}, {comments: 1}, function(err, result) {
+        res.end(JSON.stringify(result.comments));
+    });
+});
 app.post('/saveUser', authenticated, function(req, res){
     var email = req.session.passport.user.email;
     var userProfile = req.body;

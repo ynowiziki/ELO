@@ -104,6 +104,7 @@ app.factory('speech', ['$rootScope', function ($rootScope) {
 
         msg.onend = function(e){
             $rootScope.$broadcast('endOfSpeech');     //notify course controller the end of the reading
+            e.preventDefault();
         }
     }
     function pause(){
@@ -139,6 +140,25 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
     $scope.started = false;
     $scope.playing = false;
     $scope.operation = 'fa fa-play';
+    $scope.cmt = {};
+
+
+    $scope.submit = function(){                      //save a comment
+        if($scope.cmt.content){
+            $scope.loading = "fa fa-spinner fa-spin fa-3x";
+            $scope.cmt.nick = $rootScope.user.nick;
+            $scope.cmt.email = $rootScope.user.email;
+            $scope.result = $resource('/save/comment/' + $scope.course._id).save($scope.cmt, function(){
+                $resource('/list/comment/' + $scope.course._id).query(function(commentList) {
+                    $scope.course.comments = commentList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+                    $scope.loading = "";                              //list all the comments after comment being saved
+                });
+            });
+        }
+        else{
+            $scope.result = {status: 'Error: Incomplete Comment.'};
+        }
+    };
     $scope.listen = function () {
         var config = {
                 rate: $scope.rate
