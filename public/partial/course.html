@@ -1,7 +1,10 @@
 <div>
 	<div ng-show="user.email">
 		<h4 class="text-warning">{{greeting}}</h4>
-		<h3>Courses</h3><a class="btn btn-info pull-right" href="/create" popover="Post your favorite article, and let computer read it!" popover-trigger="mouseenter" popover-placement="bottom" popover-title="Nothing impressive?" ><i class="fa fa-plus"></i> Create New Course</a>
+		<h3><i class="fa fa-book "></i> Courses</h3>
+		<a class="btn btn-warning pull-right" href="/create" tooltip-placement="left" tooltip-html-unsafe="<h4>Post your favorite article, and let the computer read it!</h4>" >
+			<i class="fa fa-plus"></i> Your Course
+		</a>
 		<hr>
 
 		<div>
@@ -13,6 +16,7 @@
 					<th>Author</th>
 					<th>Image</th>
 					<th>Name</th>
+					<th><i class="fa fa-comment"></i></th>
 					<th>
 						Content
 						<input type="search" ng-model="q" placeholder="Search in Content" class="searchBox pull-right">
@@ -32,7 +36,8 @@
 					<td class="small">
 						<a href='/course/{{course._id}}'>{{course.name}}</a>
 					</td>
-					<td><span class="badge">{{course.commentCount}}</span> {{course.content}}</td>
+					<td><span class="badge">{{course.commentCount}}</span></td>
+					<td>{{course.content}}</td>
 					<td class="date">{{course.date | date: "short"}}</td>
 				</tr>
 				</tbody>

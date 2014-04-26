@@ -40,12 +40,11 @@ app.service('IndexedDBService', function($timeout) {
                 db = e.target.result;
                 fn();
             };
+            request.onerror = this.onerror;
         }
         else{
             console.log('ERROR: Error occured while accessing indexedDB.')
         }
-
-        request.onerror = this.onerror;
     };
 
     this.getAllItems = function(table, iterateCB, finalCB) {

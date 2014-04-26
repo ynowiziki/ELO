@@ -92,19 +92,22 @@ app.factory('speech', ['$rootScope', function ($rootScope) {
     function sayIt(text, config) {                  //only rate is configurable
         var voices = window.speechSynthesis.getVoices();
         //choose voice. Fallback to default
-        msg.voice = voices[10];    //config && config.voiceIndex ? voices[config.voiceIndex] : voices[10];
-        msg.volume = 1;   //config && config.volume ? config.volume : 1;
-        msg.rate = config && config.rate ? config.rate : 1;
-        msg.pitch = 1;    //config && config.pitch ? config.pitch : 1;
+        if(msg && voices.length > 10) {
+            msg.voice = voices[10];
+            //config && config.voiceIndex ? voices[config.voiceIndex] : voices[10];
+            msg.volume = 1;   //config && config.volume ? config.volume : 1;
+            msg.rate = config && config.rate ? config.rate : 1;
+            msg.pitch = 1;    //config && config.pitch ? config.pitch : 1;
 
-        //message for speech
-        msg.text = text;
+            //message for speech
+            msg.text = text;
 
-        speechSynthesis.speak(msg);
+            speechSynthesis.speak(msg);
 
-        msg.onend = function(e){
-            $rootScope.$broadcast('endOfSpeech');     //notify course controller the end of the reading
-            e.preventDefault();
+            msg.onend = function(e){
+                $rootScope.$broadcast('endOfSpeech');     //notify course controller the end of the reading
+                e.preventDefault();
+            }
         }
     }
     function pause(){
@@ -344,9 +347,11 @@ app.controller('commentCtrl', function($scope, $resource, $location, $rootScope)
     };
 });
 //use simpleWebRTC (https://github.com/henrikjoreteg/SimpleWebRTC ) to provide P2P video chat
-app.controller('peerCtrl', function($scope, $location){
+app.controller('peerCtrl', function($scope, $location, $rootScope){
+    $scope.mustLogin = false;
     $scope.join = function(){
-        if($scope.topic){
+        if($scope.topic && $rootScope.user){
+            $scope.mustLogin = false;
             if(! $scope.webrtc) {
                 $scope.webrtc = new SimpleWebRTC({
                     // the id/element dom element that will hold "our" video
@@ -361,6 +366,9 @@ app.controller('peerCtrl', function($scope, $location){
                 // you can name it anything
                 $scope.webrtc.joinRoom($scope.topic);
             });
+        }
+        else{
+            $scope.mustLogin = true;
         }
     }
 
