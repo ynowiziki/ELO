@@ -138,6 +138,7 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
         course.content.split('\n').forEach(function(para){
             $scope.paragraphs.push({text:para});
         });
+        course.comments.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
     });
     $scope.rate = 1;
     $scope.started = false;
