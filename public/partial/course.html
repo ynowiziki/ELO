@@ -32,7 +32,7 @@
 					<td class="small">
 						<a href='/course/{{course._id}}'>{{course.name}}</a>
 					</td>
-					<td>{{course.content}}</td>
+					<td><span class="badge">{{course.commentCount}}</span> {{course.content}}</td>
 					<td class="date">{{course.date | date: "short"}}</td>
 				</tr>
 				</tbody>

@@ -110,6 +110,10 @@ app.get('/list/:col', authenticated, function(req, res) {
             if(dataList[i].content.length > 200){
                 dataList[i].content = dataList[i].content.substring(0,200) + '...';
             }
+            if(dataList[i].comments){
+                dataList[i].commentCount = dataList[i].comments.length;
+                dataList[i].comments = [];
+            }
         }
         res.end(JSON.stringify(dataList));
     });
