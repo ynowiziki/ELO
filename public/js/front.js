@@ -75,9 +75,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 )
 //
 .run(['$rootScope', '$location',  function ($rootScope, $location) {
-    $rootScope.notChrome = false;
+    $rootScope.isChrome = true;
     if(! window.chrome){
-        $rootScope.notChrome = true;
+        $rootScope.isChrome = false;
     }
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
 //  TODO: prompt progress of long processes
