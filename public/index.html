@@ -65,10 +65,7 @@
 			</div>
 		</div>
 		<div class="col-sm-offset-1 col-sm-10 well-sm">
-			<div class="alert alert-dismissable alert-danger" ng-hide="isChrome">
-				<button type="button" class="close" data-dismiss="alert">×</button>
-				<h4>Browser not supported</h4>
-				<h5>Please use <b>Chrome</b> to visit this site, because some of the features are only supported by Chrome at this moment. Sorry for any inconvenience. <br><br><a href='https://www.google.com/intl/zh-CN/chrome/browser/'>Chrome Download link</a></h5>
+			<div id="isChrome">
 			</div>
 			<div ng-view="index" ng-animate="{enter: 'view-enter', leave:'rotateRight'}" class="well-large">
 			</div>

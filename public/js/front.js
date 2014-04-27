@@ -75,9 +75,10 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 )
 //
 .run(['$rootScope', '$location',  function ($rootScope, $location) {
-    $rootScope.isChrome = true;
     if(! window.chrome){
-        $rootScope.isChrome = false;
+        var warning = document.getElementById('isChrome');
+        warning.innerHTML='<h4>Browser not supported</h4><h5>Please use <b>Chrome</b> to visit this site, because some of the features are only supported by Chrome at this moment. Sorry for any inconvenience. <br><br><a href="https://www.google.com/intl/zh-CN/chrome/browser/">Chrome Download link</a></h5>';
+        warning.className = "alert alert-dismissable alert-danger";
     }
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
 //  TODO: prompt progress of long processes
