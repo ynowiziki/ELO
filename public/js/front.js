@@ -75,6 +75,10 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
 )
 //
 .run(['$rootScope', '$location',  function ($rootScope, $location) {
+    $rootScope.notChrome = false;
+    if(! window.chrome){
+        $rootScope.notChrome = true;
+    }
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
 //  TODO: prompt progress of long processes
     });
@@ -146,16 +150,18 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
     $scope.operation = 'fa fa-play';
     $scope.cmt = {};
 
-
     $scope.submit = function(){                      //save a comment
         if($scope.cmt.content){
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
             $scope.cmt.nick = $rootScope.user.nick;
             $scope.cmt.email = $rootScope.user.email;
+            $scope.cmt.start = $scope.start;
+            $scope.cmt.end = $scope.end;
             $scope.result = $resource('/save/comment/' + $scope.course._id).save($scope.cmt, function(){
                 $resource('/list/comment/' + $scope.course._id).query(function(commentList) {
                     $scope.course.comments = commentList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
                     $scope.loading = "";                              //list all the comments after comment being saved
+                    $scope.cmt = {};
                 });
             });
         }
@@ -214,6 +220,21 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
         $scope.operation = 'fa fa-play';
         $scope.$apply();
     });
+    $scope.selectText = function(e) {
+        var output = document.getElementById('output');
+        output.style.left = '15px';
+        output.style.top = e.layerY+'px';
+        $scope.x = e.x;
+        $scope.y = e.y;
+        $scope.textSelected = '';
+        if (window.getSelection) {
+            var selected = window.getSelection();
+            $scope.textSelected = selected.toString();
+            $scope.start = selected.baseOffset;
+            $scope.end = selected.extentOffset;
+        }
+    };
+
     $scope.toggleShow = function() {
         $scope.showText = !$scope.showText;
     }

@@ -37,6 +37,17 @@ body {
     border-left: 0px;
     border-bottom: dodgerblue 2px solid;
 }
+.speed {
+    text-align: center;
+}
+.embedComment{
+    position: absolute;
+    opacity: 0.85
+}
+.highlighted{
+    background-color: black;
+    color: white;
+}
 .full-width {
     width: 100%;
 }

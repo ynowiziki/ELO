@@ -26,8 +26,8 @@
 		<script src="js/front.js"></script>
 	</head>
 
-	<body class="google-font">
-		<div class="navbar navbar-default navbar-fixed-top" ng-controller="menuCtrl">
+	<body>
+		<div class="navbar navbar-default navbar-fixed-top google-font" ng-controller="menuCtrl">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse" ng-click="toggleCollapsed()">
 					<span class="icon-bar"></span>
@@ -65,7 +65,11 @@
 			</div>
 		</div>
 		<div class="col-sm-offset-1 col-sm-10 well-sm">
-			<h2 id="warn" class="text-danger"></h2>
+			<div class="alert alert-dismissable alert-danger" ng-show="notChrome">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				<h4>Browser not supported</h4>
+				<h5>Please use <b>Chrome</b> to visit this site, because some of the features are only supported by Chrome at this moment. Sorry for any inconvenience. <br><br><a href='https://www.google.com/intl/zh-CN/chrome/browser/'>Chrome Download link</a></h5>
+			</div>
 			<div ng-view="index" ng-animate="{enter: 'view-enter', leave:'rotateRight'}" class="well-large">
 			</div>
 		</div>
@@ -73,11 +77,7 @@
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<script>
-			if(! window.chrome){
-				document.getElementById("warn").innerHTML = "Please use Chrome to visit this site, because some of the features are only supported by Chrome at this moment. <a href='https://www.google.com/intl/zh-CN/chrome/browser/'>Download link</a>";
-			}
-		</script>
+
 		<script src="js/ui-bootstrap-tpls-0.6.0.min.js"></script>
 		<script src="js/resource.js"></script>
 		<script src="js/imageResizeService.js"></script>
