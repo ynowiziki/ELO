@@ -42,7 +42,15 @@ body {
 }
 .embedComment{
     position: absolute;
-    opacity: 0.85
+    width: 100%;
+    background-color: lightyellow;
+    /*opacity: 0.9;*/
+    border: dodgerblue 1px solid;
+}
+.commentRow {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 5px;
 }
 .highlighted{
     background-color: black;

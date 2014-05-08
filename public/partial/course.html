@@ -18,8 +18,8 @@
 					<th>Name</th>
 					<th><i class="fa fa-comment"></i></th>
 					<th>
-						Content
-						<input type="search" ng-model="q" placeholder="Search in Content" class="searchBox pull-right">
+						Introduction
+						<input type="search" ng-model="q" placeholder="Search in Introduction" class="searchBox pull-right">
 					</th>
 					<th>Date</th>
 				</tr>
@@ -28,7 +28,7 @@
 				<tr ng-repeat="course in courses  | filter:{content: q}"
 					ng-animate="{enter: 'view-enter', leave:'view-exit'}">
 					<td>
-						{{course.author.nick}}
+						{{course.author}}
 					</td>
 					<td>
 						<img ng-src="{{course.img}}" width="50">

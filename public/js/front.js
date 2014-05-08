@@ -74,7 +74,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     }]
 )
 //
-.run(['$rootScope', '$location',  function ($rootScope, $location) {
+.run(['$rootScope', '$location', 'speech',  function ($rootScope, $location, speech) {
     if(! window.chrome){
         var warning = document.getElementById('isChrome');
         warning.innerHTML='<h4>Browser not supported</h4><h5>Please use <b>Chrome</b> to visit this site, because some of the features are only supported by Chrome at this moment. Sorry for any inconvenience. <br><br><a href="https://www.google.com/intl/zh-CN/chrome/browser/">Chrome Download link</a></h5>';
@@ -82,6 +82,7 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     }
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
 //  TODO: prompt progress of long processes
+        speech.cancel();        //stop speech synthesis when user navigates to another page
     });
 
 }]);
@@ -137,39 +138,145 @@ app.factory('speech', ['$rootScope', function ($rootScope) {
 }]);
 
 app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech', '$routeParams', function ($scope, $rootScope, $resource, speech, $routeParams) {
-    $resource('/show/course/'+ $routeParams.id).get(function(course){
+    $scope.load = function(){
+        $resource('/show/course/'+ $routeParams.id).get(function(course){
         $scope.course = course;
+        $scope.showText = true;
         $scope.paragraphs = [];
+        $scope.cmt = {};
         course.content.split('\n').forEach(function(para){
             $scope.paragraphs.push({text:para});
         });
-        course.comments.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+
+        var courseText = document.getElementById('courseText');
+        courseText.innerHTML = '';
+        var output = document.getElementById('comment');
+        $scope.comentText = '';
+        output.style.display = 'none';
+        var splitPosition = [];
+        var len = [];
+        if(course.comments){
+            course.comments.sort(function(a,b){return a.position - b.position;}).forEach(function(comment, index){
+                splitPosition[index] = comment.position;        //record start position of each comment
+                len[index] = comment.text.length;
+            });
+        }
+        var previousPosition = 0;
+        $scope.overlapped = false;
+        splitPosition.forEach(function(position, index){
+            var span = document.createElement("span");
+            var text = course.content.substring(previousPosition, position);
+            span.innerHTML = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');   //encode HTML
+            courseText.insertBefore(span, null);
+            span = document.createElement("span");
+            span.style.backgroundColor = "yellow";
+            span.addEventListener('mouseover', function(e){
+                $scope.textSelected = e.srcElement.innerText;
+                e.srcElement.style.backgroundColor = 'orange';
+                $scope.currentComments = course.comments[index];
+                $scope.currentComments.reply.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
+                $scope.$apply();
+                var output = document.getElementById('comment');
+                output.style.display = "block";
+                output.style.left = '15px';
+                output.style.top = e.layerY+'px';
+                output.style.marginTop = '10px';
+                //when selected text contains part of the text which has already been commented, set this indicator to true.
+                //Then the mouseup event handler 'selectText()' will not mark the selected text as a new comment label.
+                $scope.overlapped = true;
+            });
+            span.addEventListener('mouseout', function(e){
+                e.srcElement.style.backgroundColor = 'yellow';
+                $scope.overlapped = false;       //reset overlap indicator to enable new text selection
+            });
+            span.innerHTML = course.content.substring(position, position+len[index]).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+            previousPosition = position + len[index];
+            courseText.insertBefore(span, null);
+        });
+        var span = document.createElement("span");
+        var text = course.content.substring(previousPosition).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+        span.innerHTML = text;
+        courseText.insertBefore(span,null);
     });
+    }
+    $scope.load();
     $scope.rate = 1;
     $scope.started = false;
     $scope.playing = false;
     $scope.operation = 'fa fa-play';
-    $scope.cmt = {};
+
+    $scope.remove = function() {
+        var confirmed = confirm("Are you sure you want to remove this course? \n\nWarning: Removed courses can not be recovered.");
+        if (confirmed) {
+            $resource('remove/course/'+$scope.course['_id']).delete(function(result){
+                $scope.numberOfRemovedDocs = result.numberOfRemovedDocs;
+            });
+        }
+    }
+    $scope.selectText = function(e) {
+        if(!$scope.overlapped){
+            var output = document.getElementById('comment');
+            output.style.left = '15px';
+            output.style.top = e.layerY+'px';
+            output.style.marginTop = '10px';
+            $scope.x = e.x;
+            $scope.y = e.y;
+            $scope.textSelected = '';
+            $scope.currentComments = [];
+            if (window.getSelection && window.getSelection().toString().length>0) {
+                var selected = window.getSelection();
+                $scope.textSelected = selected.toString();
+
+                var overlap = false;
+                var startPosition = $scope.course.content.indexOf($scope.textSelected);
+                var endPosition = startPosition + $scope.textSelected.length;
+                $scope.course.comments.forEach(function(comment){
+                    if(startPosition <= comment.position && endPosition >= (comment.position+comment.text.length)){
+                        overlap = true;
+                    }
+                })
+                if(overlap){
+                    $scope.textSelected = '';
+                }
+                else {
+                    $scope.selection = selected.getRangeAt(0);
+                    $scope.selectedDom = $scope.selection.extractContents();
+                    var span = document.createElement("span");
+                    span.style.backgroundColor = "yellow";
+                    span.appendChild($scope.selectedDom);
+                    $scope.position = $scope.course.content.indexOf($scope.textSelected);
+                    $scope.selection.insertNode(span);
+                }
+            }
+        }
+    };
 
     $scope.submit = function(){                      //save a comment
-        if($scope.cmt.content){
+        if($scope.comentText){
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
-            $scope.cmt.nick = $rootScope.user.nick;
-            $scope.cmt.email = $rootScope.user.email;
-            $scope.cmt.start = $scope.start;
-            $scope.cmt.end = $scope.end;
-            $scope.result = $resource('/save/comment/' + $scope.course._id).save($scope.cmt, function(){
-                $resource('/list/comment/' + $scope.course._id).query(function(commentList) {
-                    $scope.course.comments = commentList.sort(function(a,b){return new Date(b.date) - new Date(a.date);});
-                    $scope.loading = "";                              //list all the comments after comment being saved
-                    $scope.cmt = {};
-                });
+            $scope.cmt.reply = {nick : $rootScope.user.nick, content: $scope.comentText};
+            $scope.cmt.text = $scope.textSelected;
+            $scope.cmt.position = $scope.course.content.indexOf($scope.textSelected);
+            $resource('/exist/comment/' + $scope.course._id).save({text: $scope.textSelected}, function(result) {
+                if(result.exist){
+                    $scope.result = $resource('/insert/comment/' + $scope.course._id).save($scope.cmt, function(){
+                        $scope.load();
+                    });
+                }
+                else{
+                    $scope.result = $resource('/save/comment/' + $scope.course._id).save($scope.cmt, function(){
+                        $scope.load();
+                    });
+                }
             });
         }
         else{
             $scope.result = {status: 'Error: Incomplete Comment.'};
         }
     };
+    $scope.close = function(){
+        $scope.textSelected = '';
+    }
     $scope.listen = function () {
         var config = {
                 rate: $scope.rate
@@ -221,20 +328,6 @@ app.controller('courseShowCtrl', ['$scope', '$rootScope', '$resource', 'speech',
         $scope.operation = 'fa fa-play';
         $scope.$apply();
     });
-    $scope.selectText = function(e) {
-        var output = document.getElementById('output');
-        output.style.left = '15px';
-        output.style.top = e.layerY+'px';
-        $scope.x = e.x;
-        $scope.y = e.y;
-        $scope.textSelected = '';
-        if (window.getSelection) {
-            var selected = window.getSelection();
-            $scope.textSelected = selected.toString();
-            $scope.start = selected.baseOffset;
-            $scope.end = selected.extentOffset;
-        }
-    };
 
     $scope.toggleShow = function() {
         $scope.showText = !$scope.showText;
@@ -251,7 +344,7 @@ app.controller('courseListCtrl',['$scope', '$rootScope', '$resource', 'speech', 
         });
     };
     if(! ($rootScope.user && $rootScope.user.email)) {
-        $resource('/userInfo').get(function(user){ //load user profile when user refreshes the home page
+        $resource('/userInfo').get(function(user){          //load user profile when user refreshes the home page
             $rootScope.user = user;
         });
     }
@@ -272,7 +365,7 @@ app.controller('courseCreateCtrl',['$scope', '$rootScope', '$resource', '$locati
     $scope.submit = function(){                  //save a new course
         if($scope.course.name && $scope.course.content){
             $scope.loading = "fa fa-spinner fa-spin fa-3x";
-            $scope.course.author = {nick : $rootScope.user.nick, id :$rootScope.user._id} ;
+            $scope.course.author = $rootScope.user.nick;
             $scope.result = $resource('/save/course').save($scope.course, function(){
                 $location.path("/");             //redirect to course list after saving the course
             });
