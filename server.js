@@ -7,10 +7,10 @@ function authenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.send(401);
+    res.send(401);     //send 401 to trigger client side redirecting to login page
 }
 
-function hashPassword(password, fn){
+function hashPassword(password, fn){                 //encrypt password
     bcrypt.genSalt(12, function(err, salt){
         if (err) console.log(err);
         bcrypt.hash(password, salt, function(err, hash){
@@ -31,8 +31,8 @@ var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
 
 var port = Number(process.env.PORT || 5000);
-var baseUrl = "http://localhost:"+port+'/';    //development environment
-if (process.env.REDISTOGO_URL) {   //Heroku production enrironment
+var baseUrl = "http://localhost:"+port+'/';     //development environment
+if (process.env.REDISTOGO_URL) {                //Heroku production enrironment
     baseUrl = "http://www.studycolony.com/";
 }
 app.configure(function(){
@@ -59,6 +59,7 @@ app.configure('development', function(){
     console.log('================ development environment ================');
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
+
 function clientErrorHandler(err, req, res, next) {
     if (req.xhr) {
         res.send(500, { error: 'Something blew up!' });
@@ -83,13 +84,13 @@ MongoClient.connect(uri,{server: {auto_reconnect: true}}, function(err, mongo) {
     db = mongo;
     server = app.listen(port, function() {        //start app server after mongodb is connected
         console.log('Listening on port %d', server.address().port);
-//        require('./lib/bootstrap').init()
+//        require('./lib/bootstrap').init()       //for data migration uses only
     });
 });
 var email   = require("emailjs/email");
 var mailServer  = email.server.connect({
-    user:    "teamofelc",
-    password:"vfrtgb123",
+    user:    "user",
+    password:"password",
     host:    "smtp.gmail.com",
     ssl:     true
 });
@@ -99,6 +100,14 @@ app.get('/show/:col/:id', authenticated, function(req, res) {
     res.setHeader('Content-Type', 'application/json; charset="utf-8"');
     db.collection(col).findOne({_id: new ObjectID(id)}, function(err, data) {
         res.end(JSON.stringify(data));
+    });
+});
+app.delete('/remove/:col/:id', authenticated, function(req, res) {
+    var col = req.params.col;
+    var id = req.params.id;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection(col).remove({_id: new ObjectID(id), email: req.session.passport.user.email}, function(err, numberOfRemovedDocs) {
+        res.end(JSON.stringify({'numberOfRemovedDocs':numberOfRemovedDocs}));
     });
 });
 app.get('/list/:col', authenticated, function(req, res) {
@@ -124,21 +133,48 @@ app.post('/save/:col', authenticated, function(req, res){
     var record = req.body;
     record.email = email;
     record.date = new Date();
-    record.content = record.content.substring(0,60000);
+    record.content = record.content.substring(0,100000);
     res.setHeader('Content-Type', 'application/json; charset="utf-8"');
     db.collection(col).insert(record, function(err, result) {
         res.end(JSON.stringify({status : 'ok'}));
     });
 });
+app.post('/exist/comment/:id', authenticated, function(req, res){
+    var comment = req.body;
+    var id = req.params.id;
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('course').find({'_id': new ObjectID(id), 'comments':{$elemMatch: {'text': comment.text}}}).toArray(function(err, result){
+        if(result.length > 0){
+            res.end(JSON.stringify({'exist': true}));
+        }
+        else{
+            res.end(JSON.stringify({'exist': false}));
+        }
+    });
+});
 app.post('/save/comment/:id', authenticated, function(req, res){
-    var email = req.session.passport.user.email;
+    var user = req.session.passport.user;
+    var id = req.params.id;
+    var record = {};
+    record.text = req.body.text;
+    record.position = req.body.position;
+    record.reply = [];
+    record.reply.push({nick:user.nick, email: user.email, date: new Date(), content: req.body.reply.content.substring(0,4000)});
+    res.setHeader('Content-Type', 'application/json; charset="utf-8"');
+    db.collection('course').update({'_id': new ObjectID(id)}, {$push:{'comments': record}}, function(err, result) {
+        res.end(JSON.stringify({status : 'ok'}));
+    });
+});
+app.post('/insert/comment/:id', authenticated, function(req, res){
+    var user = req.session.passport.user;
     var id = req.params.id;
     var record = req.body;
-    record.email = email;
-    record.date = new Date();
-    record.content = record.content.substring(0,2000);
+    record.reply.nick = user.nick;
+    record.reply.email = user.email;
+    record.reply.date =  new Date();
+    record.reply.content = record.reply.content.substring(0,4000);
     res.setHeader('Content-Type', 'application/json; charset="utf-8"');
-    db.collection('course').update({'_id': new ObjectID(id)}, {$push: {comments: record}}, function(err, result) {
+    db.collection('course').update({'_id': new ObjectID(id), 'comments': {$elemMatch:{'text':record.text}}}, {$push: {'comments.$.reply': record.reply}}, function(err, result) {
         res.end(JSON.stringify({status : 'ok'}));
     });
 });
